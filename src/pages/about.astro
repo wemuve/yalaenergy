@@ -1,0 +1,495 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import Photo from '../components/Photo.astro';
+import Arrow from '../components/Arrow.astro';
+import { COMPANY, LEADERSHIP } from '../data/company';
+import { BRAND } from '../data/site';
+
+const description =
+  'Yala Energy Limited is a wholly Zambian-owned renewable-energy company developing solar generation with battery storage, and offering PV and BESS engineering consulting. Company record, vision, governance intentions and leadership.';
+---
+
+<BaseLayout
+  title="About Yala Energy"
+  description={description}
+  path="/about/"
+  schema={[
+    {
+      '@type': 'AboutPage',
+      '@id': 'https://yalaenergy.co.zm/about/#webpage',
+      url: 'https://yalaenergy.co.zm/about/',
+      name: 'About Yala Energy',
+      description,
+      isPartOf: { '@id': 'https://yalaenergy.co.zm/#website' },
+      about: { '@id': 'https://yalaenergy.co.zm/#organization' },
+    },
+  ]}
+>
+  <!-- ===================== Page hero ===================== -->
+  <section class="page-hero stage--forest" aria-labelledby="about-title">
+    <div class="page-hero__media" aria-hidden="true">
+      <Photo photo="array" fill sizes="100vw" fallbackMood="dusk" idPrefix="about" />
+    </div>
+    <div class="shell page-hero__inner">
+      <p class="eyebrow">About Yala Energy</p>
+      <h1 class="title-xl page-hero__title" id="about-title">{COMPANY.headline}</h1>
+      <p class="page-hero__lede">{COMPANY.lede}</p>
+      <p class="page-hero__slogan">{BRAND.slogan}</p>
+    </div>
+  </section>
+
+  <!-- ===================== Who we are ===================== -->
+  <section class="stage stage--paper" aria-labelledby="who-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="lead stack stack--lg" data-reveal>
+          <p class="eyebrow">Who we are</p>
+          <h2 class="title-md" id="who-title">An operating company, not a brochure.</h2>
+          <a class="link-arrow" href="/projects/muchenje-solar-pv-plant/">
+            See the project we are developing
+            <Arrow size={12} class="" />
+          </a>
+        </div>
+        <div class="body prose" data-reveal>
+          {COMPANY.description.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Company record ===================== -->
+  <section class="stage stage--sunken" aria-labelledby="record-title">
+    <div class="shell">
+      <SectionHead eyebrow="Company record" title="The formal details." titleClass="title-md" id="record-title" split>
+        <p>
+          The entries below are as supplied by the company. Each is on the pre-launch verification
+          checklist and will be confirmed against the registration documents before it is presented
+          as established fact.
+        </p>
+      </SectionHead>
+
+      <div class="spec-table-wrap record" data-reveal>
+        <table class="spec-table">
+          <caption>Company registration details, as supplied by Yala Energy Limited.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Item</th>
+              <th scope="col">Detail</th>
+              <th scope="col">Status</th>
+              <th scope="col">Verification note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              COMPANY.record.map((row) => (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td class="spec-table__value">{row.value}</td>
+                  <td><StatusBadge status={row.status} explain={false} /></td>
+                  <td class="spec-table__note">{row.note}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Vision & mission ===================== -->
+  <section class="stage stage--ink stage--grid-texture" aria-labelledby="vision-title">
+    <div class="shell">
+      <h2 class="visually-hidden" id="vision-title">Vision and mission</h2>
+      <div class="vision">
+        <div class="vision__item" data-reveal>
+          <p class="eyebrow">Vision</p>
+          <p class="vision__statement">{COMPANY.vision}</p>
+        </div>
+        <div class="vision__item" data-reveal>
+          <p class="eyebrow">Mission</p>
+          <p class="vision__statement">{COMPANY.mission}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Approach ===================== -->
+  <section class="stage stage--paper" id="approach" aria-labelledby="approach-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="How we work"
+        title="Four commitments that shape every decision."
+        titleClass="title-lg"
+        id="approach-title"
+        split
+      >
+        <p>
+          These are the working rules behind both the development programme and the consulting
+          practice. They are also why this website labels its own figures.
+        </p>
+      </SectionHead>
+
+      <div class="columns--2 columns approach" data-reveal-group>
+        {
+          COMPANY.approach.map((item, index) => (
+            <article class="approach__item" data-reveal>
+              <p class="approach__index">{String(index + 1).padStart(2, '0')}</p>
+              <h3 class="title-xs">{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Leadership ===================== -->
+  <section class="stage stage--raised" id="leadership" aria-labelledby="leadership-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Promoters and management"
+        title="Sixty years of power-sector and governance experience behind one project."
+        titleClass="title-lg"
+        id="leadership-title"
+        split
+      >
+        <p>
+          Yala Energy was founded by two people whose careers span the Zambian electricity sector
+          and African institutional governance.
+        </p>
+        <p class="leadership__disclaimer">
+          The biographies below are reproduced from information supplied by the company and are
+          pending written confirmation by each individual. The organisations named are previous or
+          current affiliations of the person concerned; none of them endorses Yala Energy or its
+          projects.
+        </p>
+      </SectionHead>
+
+      <div class="people" data-reveal-group>
+        {
+          LEADERSHIP.map((person) => (
+            <article class="person" data-reveal>
+              <div class="person__portrait" aria-hidden="true">
+                <span>{person.initials}</span>
+              </div>
+
+              <div class="person__body">
+                <div class="person__head">
+                  <h3 class="title-sm">{person.name}</h3>
+                  <p class="person__role">{person.role}</p>
+                  <StatusBadge status={person.status} />
+                </div>
+
+                <p class="person__summary">{person.summary}</p>
+
+                <div class="person__lists">
+                  <div>
+                    <h4 class="person__list-title">Qualifications</h4>
+                    <ul class="ticks ticks--dash">
+                      {person.credentials.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 class="person__list-title">Stated experience</h4>
+                    <ul class="ticks ticks--dash">
+                      {person.experience.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="people__photo-note" data-reveal>
+        Portrait photography will be published once authorised images are supplied by each
+        individual. Initials are shown in the interim rather than stand-in stock photography of
+        other people.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== Governance ===================== -->
+  <section class="stage stage--sunken" id="governance" aria-labelledby="governance-title">
+    <div class="shell">
+      <SectionHead eyebrow="Governance" title="What we intend to hold ourselves to." titleClass="title-lg" id="governance-title" split>
+        <p>{COMPANY.governance.lede}</p>
+      </SectionHead>
+
+      <div class="columns governance" data-reveal-group>
+        {
+          COMPANY.governance.intentions.map((item) => (
+            <article class="governance__item" data-reveal>
+              <StatusBadge status={item.status} />
+              <h3 class="title-xs">{item.title}</h3>
+              <p>{item.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Community ===================== -->
+  <section class="stage stage--forest" id="community" aria-labelledby="community-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">Community and local benefit</p>
+          <h2 class="title-lg" id="community-title">Local benefit as a design input.</h2>
+          <p class="lede">{COMPANY.community.lede}</p>
+          <StatusBadge status={COMPANY.community.status} />
+        </div>
+
+        <div class="half-end stack stack--lg" data-reveal>
+          {
+            COMPANY.community.commitments.map((item) => (
+              <div class="community__item">
+                <h3 class="title-xs">{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA ===================== -->
+  <section class="stage stage--tight stage--paper" aria-labelledby="about-cta-title">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <div class="stack stack--sm">
+          <h2 class="title-md" id="about-cta-title">Want the detail behind any of this?</h2>
+          <p class="cta-band__note">
+            We will share the documentation we have, and tell you plainly what we do not yet have.
+          </p>
+        </div>
+        <div class="cluster">
+          <a class="btn" href="/contact/">
+            Contact Yala Energy
+            <Arrow />
+          </a>
+          <a class="btn btn--ghost" href="/information-accuracy/">
+            How we label claims
+            <Arrow />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* `.page-hero` and `.cta-band` live in src/styles/patterns.css — they are
+     shared by every inner page. */
+
+  /* --- Record table --- */
+  .record {
+    margin-block-start: var(--space-2xl);
+  }
+
+  /* --- Vision --- */
+  .vision {
+    display: grid;
+    gap: var(--space-2xl) var(--gutter);
+  }
+
+  @media (min-width: 56rem) {
+    .vision {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .vision__item {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    padding-block-start: var(--space-lg);
+    border-block-start: 1px solid var(--rule-on-ink-strong);
+  }
+
+  .vision__statement {
+    max-width: 34ch;
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: 600;
+    letter-spacing: var(--tracking-display);
+    line-height: 1.14;
+    text-wrap: pretty;
+  }
+
+  /* --- Approach --- */
+  .approach {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .approach__item {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 2px solid var(--forest-900);
+  }
+
+  .approach__index {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+  }
+
+  .approach__item p:last-child {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.62;
+  }
+
+  /* --- Leadership --- */
+  .leadership__disclaimer {
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  .people {
+    display: grid;
+    gap: var(--space-2xl);
+    margin-block-start: var(--space-2xl);
+  }
+
+  .person {
+    display: grid;
+    gap: var(--space-lg) var(--gutter);
+    padding-block-start: var(--space-xl);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  @media (min-width: 48rem) {
+    .person {
+      grid-template-columns: 8rem minmax(0, 1fr);
+    }
+  }
+
+  .person__portrait {
+    display: grid;
+    place-items: center;
+    width: 5.5rem;
+    height: 5.5rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 50%;
+    background: var(--surface-sunken);
+    color: var(--forest-600);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .person__body {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .person__head {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+  }
+
+  .person__role {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .person__summary {
+    max-width: 68ch;
+    margin: 0;
+    color: var(--text-body);
+    line-height: 1.62;
+  }
+
+  .person__lists {
+    display: grid;
+    gap: var(--space-lg) var(--gutter);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  @media (min-width: 44rem) {
+    .person__lists {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .person__list-title {
+    margin-block-end: var(--space-sm);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .people__photo-note {
+    max-width: 72ch;
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule);
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  /* --- Governance --- */
+  .governance {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .governance__item {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+    align-content: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 2px solid var(--forest-900);
+  }
+
+  .governance__item p:last-child {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  /* --- Community --- */
+  .community__item {
+    display: grid;
+    gap: 0.4rem;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule-on-ink);
+  }
+
+  .community__item p {
+    margin: 0;
+    max-width: 54ch;
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+</style>

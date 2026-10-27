@@ -1,0 +1,215 @@
+---
+import Logo from './Logo.astro';
+import { BRAND, FOOTER_NAV, CONTACT } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer stage--ink" id="site-nav">
+  <div class="shell shell--wide">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <Logo variant="full" tone="ink" size={44} withSlogan />
+        <p class="footer__pitch">{BRAND.supportingHeadline}</p>
+        <a class="btn btn--accent" href="/contact/">
+          Partner With Yala
+          <svg class="btn__arrow" width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+            <path d="M1 5h11M8.4 1.2 12.2 5 8.4 8.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </a>
+      </div>
+
+      <nav class="footer__nav" aria-label="Footer">
+        {
+          FOOTER_NAV.map((group) => (
+            <div class="footer__group">
+              <h2 class="footer__group-title">{group.title}</h2>
+              <ul class="plain footer__links">
+                {group.items.map((item) => (
+                  <li>
+                    <a href={item.href}>{item.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="footer__contact">
+      <div class="footer__contact-block">
+        <h2 class="footer__group-title">Enquiries</h2>
+        <a class="footer__email" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+        {
+          !CONTACT.telephone && (
+            <p class="footer__micro">
+              Telephone numbers are being verified and are not published here yet.
+            </p>
+          )
+        }
+      </div>
+      {
+        CONTACT.offices.map((office) => (
+          <div class="footer__contact-block">
+            <h2 class="footer__group-title">{office.label}</h2>
+            <address class="footer__address">
+              {office.lines.map((line) => (
+                <span>{line}</span>
+              ))}
+            </address>
+            {!office.verified && <p class="footer__micro">Address pending company verification.</p>}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="footer__legal">
+      <p>© {year} {BRAND.legalName}. All rights reserved.</p>
+      <p class="footer__disclaimer">
+        This website describes projects and services under development. Capacities, costs, yields
+        and timelines shown are design assumptions or estimates unless marked otherwise, and
+        nothing here is an offer of securities, investment advice or a binding commitment. See
+        <a href="/information-accuracy/">information accuracy</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: var(--section-y-tight) var(--space-xl);
+    background: var(--forest-950);
+    color: var(--text-on-ink-muted);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--space-2xl) var(--gutter);
+    padding-block-end: var(--space-2xl);
+    border-block-end: 1px solid var(--rule-on-ink);
+  }
+
+  @media (min-width: 62rem) {
+    .footer__top {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
+    }
+  }
+
+  .footer__brand {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+    align-content: start;
+  }
+
+  .footer__pitch {
+    max-width: 24ch;
+    margin: 0;
+    color: var(--text-on-ink);
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.16;
+  }
+
+  .footer__nav {
+    display: grid;
+    gap: var(--space-xl) var(--gutter);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+  }
+
+  .footer__group-title {
+    margin-block-end: var(--space-md);
+    color: var(--lime-400);
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .footer__links {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: var(--step--1);
+  }
+
+  .footer__links a {
+    color: var(--text-on-ink-muted);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .footer__links a:hover {
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: var(--lime-500);
+    text-decoration-thickness: 2px;
+  }
+
+  .footer__contact {
+    display: grid;
+    gap: var(--space-xl) var(--gutter);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    padding-block: var(--space-2xl);
+    border-block-end: 1px solid var(--rule-on-ink);
+  }
+
+  .footer__email {
+    color: #fff;
+    font-size: var(--step-0);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--lime-500);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.25em;
+  }
+
+  .footer__address {
+    display: grid;
+    gap: 0.15rem;
+    font-size: var(--step--1);
+    font-style: normal;
+    line-height: 1.5;
+  }
+
+  .footer__micro {
+    margin-block-start: 0.5rem;
+    color: var(--forest-300);
+    font-size: var(--step--2);
+    line-height: 1.45;
+  }
+
+  .footer__legal {
+    display: grid;
+    gap: var(--space-md) var(--gutter);
+    padding-block-start: var(--space-xl);
+    color: var(--forest-300);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  @media (min-width: 62rem) {
+    .footer__legal {
+      grid-template-columns: minmax(0, 0.55fr) minmax(0, 1.45fr);
+      align-items: start;
+    }
+  }
+
+  .footer__legal p {
+    margin: 0;
+  }
+
+  .footer__disclaimer {
+    max-width: 92ch;
+  }
+
+  .footer__disclaimer a {
+    color: var(--lime-300);
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+  }
+</style>

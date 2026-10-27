@@ -1,0 +1,318 @@
+/* ===========================================================================
+   Forms: accessible labels, hints, errors, demo-mode banner
+   ======================================================================== */
+
+.form {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.form__grid {
+  display: grid;
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+}
+
+.field--wide {
+  grid-column: 1 / -1;
+}
+
+.field__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4em;
+  color: var(--text-strong);
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.field__optional {
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.field__hint {
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  line-height: 1.45;
+}
+
+.field__control {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper-pure);
+  color: var(--text-strong);
+  font-size: var(--step-0);
+  line-height: 1.45;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+textarea.field__control {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+select.field__control {
+  appearance: none;
+  padding-inline-end: 2.5rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-600) 50%),
+    linear-gradient(135deg, var(--ink-600) 50%, transparent 50%);
+  background-position: calc(100% - 1.15rem) 1.35rem, calc(100% - 0.8rem) 1.35rem;
+  background-size: 0.36rem 0.36rem, 0.36rem 0.36rem;
+  background-repeat: no-repeat;
+}
+
+.field__control:hover {
+  border-color: var(--ink-400);
+}
+
+.field__control:focus-visible {
+  border-color: var(--forest-600);
+  outline: 2px solid var(--forest-600);
+  outline-offset: 1px;
+}
+
+.field__control[aria-invalid='true'] {
+  border-color: var(--signal-rose);
+  box-shadow: inset 0 0 0 1px var(--signal-rose);
+}
+
+.field__error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45em;
+  color: var(--signal-rose);
+  font-size: var(--step--2);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.field__error:empty {
+  display: none;
+}
+
+.field__error::before {
+  content: '!';
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.05em;
+  height: 1.05em;
+  margin-block-start: 0.18em;
+  border: 1.5px solid currentcolor;
+  border-radius: 50%;
+  font-size: 0.78em;
+  line-height: 1;
+}
+
+/* --- Radio group -------------------------------------------------------- */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.radio-group__legend {
+  padding: 0;
+  margin-block-end: 0.55rem;
+  color: var(--text-strong);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+  font-size: var(--step--1);
+  cursor: pointer;
+}
+
+.choice input {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--forest-600);
+  cursor: pointer;
+}
+
+/* --- Consent ------------------------------------------------------------ */
+.consent {
+  display: grid;
+  grid-template-columns: 1.3rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+  padding: var(--space-md);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  font-size: var(--step--2);
+  line-height: 1.55;
+}
+
+.consent input {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0.15rem 0 0;
+  accent-color: var(--forest-600);
+  cursor: pointer;
+}
+
+.consent a {
+  color: var(--forest-700);
+  text-decoration: underline;
+  text-decoration-color: var(--lime-500);
+  text-decoration-thickness: 2px;
+}
+
+/* The honeypot must be unreachable for keyboard and assistive-tech users, not
+   merely invisible, so it is removed from the a11y tree and the tab order. The
+   input is collapsed as well as the wrapper: a field that only *looks* hidden
+   because an ancestor clips it still measures full size, which some assistive
+   tooling and some bots read as a real, visible field. */
+.honeypot input,
+.honeypot label {
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+}
+
+.honeypot {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- Form status regions ------------------------------------------------ */
+.form__notice {
+  display: grid;
+  gap: 0.4rem;
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--signal-amber);
+  background: color-mix(in oklab, var(--signal-amber) 7%, var(--paper-pure));
+  font-size: var(--step--2);
+  line-height: 1.55;
+}
+
+.form__notice strong {
+  color: var(--text-strong);
+}
+
+.form__status {
+  padding: var(--space-md) var(--space-lg);
+  border: 1px solid var(--rule-strong);
+  border-left: 3px solid var(--ink-600);
+  background: var(--paper-pure);
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+.form__status:empty {
+  display: none;
+}
+
+.form__status[data-state='error'] {
+  border-left-color: var(--signal-rose);
+  background: color-mix(in oklab, var(--signal-rose) 6%, var(--paper-pure));
+}
+
+.form__status[data-state='success'] {
+  border-left-color: var(--forest-600);
+  background: color-mix(in oklab, var(--forest-600) 7%, var(--paper-pure));
+}
+
+.form__status[data-state='demo'] {
+  border-left-color: var(--signal-amber);
+  background: color-mix(in oklab, var(--signal-amber) 8%, var(--paper-pure));
+}
+
+.form__status-title {
+  display: block;
+  margin-block-end: 0.3rem;
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  font-weight: 600;
+}
+
+.form__footnote {
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  line-height: 1.55;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+/* Submit button busy state. */
+.btn[data-busy='true'] {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.spinner {
+  flex: none;
+  width: 0.95em;
+  height: 0.95em;
+  border: 2px solid currentcolor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation-duration: 2.4s;
+  }
+}
+
+/* The no-JavaScript note is hidden whenever scripting is available. The `js`
+   class is set by a blocking inline script in the layout, so the note never
+   flashes for the majority of visitors who do have JavaScript. */
+[data-nojs-note] {
+  display: none;
+}
+
+:root:not(.js) [data-nojs-note] {
+  display: grid;
+}

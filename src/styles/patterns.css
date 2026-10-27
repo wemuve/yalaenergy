@@ -1,0 +1,172 @@
+/* ===========================================================================
+   Patterns shared by more than one page: inner-page hero, CTA band, notes
+   ======================================================================== */
+
+.page-hero {
+  position: relative;
+  padding-block: calc(var(--header-height) + var(--space-2xl)) var(--section-y);
+  overflow: hidden;
+  background: var(--forest-900);
+  color: var(--text-on-ink-muted);
+  isolation: isolate;
+}
+
+.page-hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.55;
+}
+
+.page-hero__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    color-mix(in oklab, var(--forest-950) 94%, transparent) 0%,
+    color-mix(in oklab, var(--forest-950) 76%, transparent) 52%,
+    color-mix(in oklab, var(--forest-950) 46%, transparent) 100%
+  );
+}
+
+.page-hero__inner {
+  display: grid;
+  gap: var(--space-lg);
+  justify-items: start;
+}
+
+.page-hero__title {
+  max-width: 26ch;
+  color: #fff;
+}
+
+.page-hero__lede {
+  max-width: 62ch;
+  margin: 0;
+  color: #cbd9cd;
+  font-size: var(--step-1);
+  line-height: 1.52;
+  text-wrap: pretty;
+}
+
+.page-hero__slogan {
+  margin: 0;
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid var(--rule-on-ink);
+  color: var(--lime-400);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+}
+
+.page-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+  align-items: center;
+  padding-block-start: var(--space-md);
+  border-block-start: 1px solid var(--rule-on-ink);
+  color: var(--text-on-ink-muted);
+  font-size: var(--step--1);
+}
+
+.page-hero__meta dt {
+  color: var(--forest-300);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+}
+
+.page-hero__meta dd {
+  margin: 0;
+  color: #fff;
+  font-weight: 500;
+}
+
+/* --- Closing CTA band -------------------------------------------------- */
+.cta-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg) var(--space-2xl);
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xl);
+  border: 1px solid var(--rule);
+  background: var(--surface-raised);
+}
+
+.stage--ink .cta-band,
+.stage--forest .cta-band {
+  border-color: var(--rule-on-ink);
+  background: color-mix(in oklab, #ffffff 5%, transparent);
+}
+
+.cta-band__note {
+  max-width: 52ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  line-height: 1.55;
+}
+
+.stage--ink .cta-band__note,
+.stage--forest .cta-band__note {
+  color: var(--text-on-ink-muted);
+}
+
+/* --- Simple editorial card used in lists of four or more --------------- */
+.rule-card {
+  display: grid;
+  gap: var(--space-sm);
+  justify-items: start;
+  align-content: start;
+  padding-block-start: var(--space-md);
+  border-block-start: 2px solid var(--forest-900);
+}
+
+.stage--ink .rule-card,
+.stage--forest .rule-card {
+  border-block-start-color: var(--lime-500);
+}
+
+.rule-card__index {
+  margin: 0;
+  color: var(--accent-on-light);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+}
+
+.stage--ink .rule-card__index,
+.stage--forest .rule-card__index {
+  color: var(--lime-400);
+}
+
+.rule-card p:last-child {
+  margin: 0;
+  color: var(--text-body);
+  font-size: var(--step--1);
+  line-height: 1.62;
+}
+
+.stage--ink .rule-card p:last-child,
+.stage--forest .rule-card p:last-child {
+  color: var(--text-on-ink-muted);
+}
+
+/* --- Micro note -------------------------------------------------------- */
+.micro-note {
+  max-width: 88ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--step--2);
+  line-height: 1.6;
+}
+
+.stage--ink .micro-note,
+.stage--forest .micro-note {
+  color: var(--forest-300);
+}

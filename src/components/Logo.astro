@@ -1,0 +1,238 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+
+/**
+ * Yala Energy brand lockup.
+ *
+ * The emblem below is a vector reconstruction of the official three-blade leaf
+ * mark: one yellow-to-lime blade in the left column, two green blades stacked
+ * in the right column, each with the fold highlight the original uses. The
+ * wordmark is set in Archivo with the same green gradient and the charcoal
+ * "ENERGY LIMITED" line beneath it.
+ *
+ * ── USING THE OFFICIAL ARTWORK FILE ────────────────────────────────────────
+ * Drop the official logo at `public/brand/yala-energy-logo.png` (or .svg) and
+ * this component uses it automatically — the vector reconstruction becomes the
+ * fallback. An SVG is strongly preferred: it stays crisp at every size and in
+ * the favicon. See BRAND-1 in docs/verification-checklist.md.
+ */
+interface Props {
+  /** `full` renders emblem plus wordmark; `mark` renders the emblem only. */
+  variant?: 'full' | 'mark';
+  /** `ink` for dark backgrounds, `dark` for light backgrounds. */
+  tone?: 'dark' | 'ink';
+  /** Rendered height of the emblem, in px. */
+  size?: number;
+  class?: string;
+  /** Show the slogan beneath the lockup (footer / hero lockup). */
+  withSlogan?: boolean;
+}
+
+const {
+  variant = 'full',
+  tone = 'dark',
+  size = 36,
+  class: className = '',
+  withSlogan = false,
+} = Astro.props;
+
+/**
+ * Prefer the official artwork when it is present in `public/brand/`. Checked at
+ * build time so there is never a request for a file that does not exist, and
+ * never a broken image.
+ */
+const BRAND_DIR = path.join(process.cwd(), 'public', 'brand');
+const OFFICIAL_CANDIDATES = ['yala-energy-logo.svg', 'yala-energy-logo.png'];
+const official = OFFICIAL_CANDIDATES.find((file) => {
+  try {
+    return fs.existsSync(path.join(BRAND_DIR, file));
+  } catch {
+    return false;
+  }
+});
+
+/** Gradient ids must be unique per instance — several lockups share a page. */
+const uid = Math.random().toString(36).slice(2, 8);
+const gid = (name: string) => `logo-${name}-${uid}`;
+---
+
+{
+  official ? (
+    <span class:list={['logo', 'logo--official', `logo--${tone}`, className]}>
+      <img
+        src={`/brand/${official}`}
+        alt="Yala Energy Limited"
+        height={variant === 'mark' ? size : Math.round(size * 1.35)}
+        style={`height:${variant === 'mark' ? size : Math.round(size * 1.35)}px`}
+        decoding="async"
+      />
+      {withSlogan && <span class="logo__slogan">Powering a Greener Future.</span>}
+    </span>
+  ) : (
+    <span class:list={['logo', `logo--${tone}`, className]} data-variant={variant}>
+      <svg
+        class="logo__mark"
+        width={Math.round(size * 0.77)}
+        height={size}
+        viewBox="0 0 80 104"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <defs>
+          <linearGradient id={gid('a')} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--blade-a-1)" />
+            <stop offset="100%" stop-color="var(--blade-a-2)" />
+          </linearGradient>
+          <linearGradient id={gid('b')} x1="0.1" y1="0" x2="0.95" y2="1">
+            <stop offset="0%" stop-color="var(--blade-b-1)" />
+            <stop offset="100%" stop-color="var(--blade-b-2)" />
+          </linearGradient>
+          <linearGradient id={gid('c')} x1="0.1" y1="0" x2="0.95" y2="1">
+            <stop offset="0%" stop-color="var(--blade-c-1)" />
+            <stop offset="100%" stop-color="var(--blade-c-2)" />
+          </linearGradient>
+        </defs>
+
+        {/* Left column: single yellow-to-lime blade. */}
+        <path d="M6 18H10C30 21 30 63 10 66H6A4 4 0 0 1 2 62V22A4 4 0 0 1 6 18Z" fill={`url(#${gid('a')})`} />
+        <path d="M6 18h7c-4 8-5.8 16-5.8 24S9 58 13 66H6a4 4 0 0 1-4-4V22a4 4 0 0 1 4-4z" fill="var(--blade-fold)" opacity="0.26" />
+
+        {/* Right column, upper blade. */}
+        <path d="M48 0H53C74 3 74 47 53 50H48A4 4 0 0 1 44 46V4A4 4 0 0 1 48 0Z" fill={`url(#${gid('b')})`} />
+        <path d="M48 0h8c-4.5 8-6.8 16.5-6.8 25S51.5 42 56 50h-8a4 4 0 0 1-4-4V4a4 4 0 0 1 4-4z" fill="var(--blade-fold)" opacity="0.28" />
+
+        {/* Right column, lower blade. */}
+        <path d="M48 54H53C74 57 74 101 53 104H48A4 4 0 0 1 44 100V58A4 4 0 0 1 48 54Z" fill={`url(#${gid('c')})`} />
+        <path d="M48 54h8c-4.5 8-6.8 16.5-6.8 25S51.5 96 56 104h-8a4 4 0 0 1-4-4V58a4 4 0 0 1 4-4z" fill="var(--blade-fold)" opacity="0.28" />
+      </svg>
+
+      {variant === 'full' && (
+        <span class="logo__text">
+          <span class="logo__wordmark">Yala</span>
+          <span class="logo__sub">Energy Limited</span>
+          {withSlogan && <span class="logo__slogan">Powering a Greener Future.</span>}
+        </span>
+      )}
+    </span>
+  )
+}
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.62rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .logo--official {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .logo--official img {
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* The official artwork is drawn for light backgrounds; on the dark stages the
+     charcoal "ENERGY LIMITED" line needs lifting out of the background. */
+  .logo--ink.logo--official img {
+    filter: brightness(0) invert(1) sepia(0.1) saturate(0.2) brightness(1.08);
+  }
+
+  .logo__mark {
+    flex: none;
+  }
+
+  .logo__text {
+    display: grid;
+    gap: 0.17rem;
+  }
+
+  .logo__wordmark {
+    background: linear-gradient(103deg, var(--word-1) 8%, var(--word-2) 92%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-family: var(--font-display);
+    font-size: 1.32rem;
+    font-weight: 800;
+    letter-spacing: 0.005em;
+    line-height: 0.95;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .logo__sub {
+    font-family: var(--font-display);
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.235em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .logo__slogan {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  /* --- Palette taken from the official mark --- */
+  .logo--dark {
+    --blade-a-1: #e8e02a;
+    --blade-a-2: #b9d41f;
+    --blade-b-1: #0f8a2a;
+    --blade-b-2: #5bc524;
+    --blade-c-1: #1d9a2c;
+    --blade-c-2: #6fcf2a;
+    --blade-fold: #056a1d;
+    --word-1: #0f7a28;
+    --word-2: #57c22a;
+  }
+
+  .logo--dark .logo__sub {
+    color: var(--ink-900);
+  }
+
+  .logo--dark .logo__slogan {
+    color: var(--text-muted);
+  }
+
+  .logo--ink {
+    --blade-a-1: #f2ec55;
+    --blade-a-2: #cde23f;
+    --blade-b-1: #2faa43;
+    --blade-b-2: #86e04a;
+    --blade-c-1: #3ab845;
+    --blade-c-2: #97e84c;
+    --blade-fold: #0a7524;
+    --word-1: #9ee34f;
+    --word-2: #e6f7cf;
+  }
+
+  .logo--ink .logo__sub {
+    color: #ffffff;
+  }
+
+  .logo--ink .logo__slogan {
+    color: var(--text-on-ink-muted);
+  }
+
+  @media (min-width: 60rem) {
+    .logo__wordmark {
+      font-size: 1.44rem;
+    }
+
+    .logo__sub {
+      font-size: 0.6rem;
+    }
+  }
+</style>

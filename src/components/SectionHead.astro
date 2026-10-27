@@ -1,0 +1,32 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  /** Heading level, so each page keeps a single h1 and a sane outline. */
+  level?: 2 | 3;
+  titleClass?: string;
+  /** Places the lede in a second column on wide viewports. */
+  split?: boolean;
+  id?: string;
+}
+
+const { eyebrow, title, level = 2, titleClass = 'title-lg', split = false, id } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
+const hasLede = Astro.slots.has('default');
+---
+
+<div class:list={['section-head', split && hasLede && 'section-head--split']} data-reveal>
+  <div class="stack stack--sm">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <Heading class={titleClass} id={id}>{title}</Heading>
+  </div>
+  {hasLede && <div class="section-head__aside"><slot /></div>}
+</div>
+
+<style>
+  .section-head__aside {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+  }
+</style>

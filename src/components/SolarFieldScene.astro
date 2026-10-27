@@ -1,0 +1,222 @@
+---
+import { rowDepths, rowQuad, groundX, type GroundPlane } from '../lib/perspective';
+
+/**
+ * Cinematic solar-plant scene, drawn as vector artwork.
+ *
+ * ── REPLACING THIS WITH PHOTOGRAPHY ────────────────────────────────────────
+ * No licensed aerial photography of a Zambian solar plant was available to this
+ * build, and publishing unlicensed or misattributed imagery of someone else's
+ * plant as if it were Muchenje would be exactly the kind of claim this site is
+ * built to avoid. So the hero and section artwork is original vector work:
+ * honest, licence-free, resolution-independent and about 8 kB.
+ *
+ * When authorised project photography or aerial footage exists, swap this
+ * component for a <picture> (AVIF + WebP, `width`/`height` set, `fetchpriority`
+ * on the hero) or a muted looping <video> with a poster frame. See item
+ * MEDIA-1 on the verification checklist.
+ */
+interface Props {
+  /** `dusk` = the hero's golden-hour key art. `day` = cooler mid-day variant. */
+  mood?: 'dusk' | 'day';
+  class?: string;
+  /** Unique suffix for gradient ids when more than one scene is on a page. */
+  idPrefix?: string;
+}
+
+const { mood = 'dusk', class: className = '', idPrefix = 'sf' } = Astro.props;
+
+const plane: GroundPlane = { vanishX: 790, horizonY: 404, spread: 2.45 };
+
+// Array rows: 22 bands between the foreground and the haze at the horizon.
+const bands = rowDepths(892, 418, plane.horizonY, 23);
+const rows = bands.slice(0, -1).map((nearY, i) => {
+  const farY = bands[i + 1]!;
+  const panelFar = nearY - (nearY - farY) * 0.62; // panel face occupies most of the band
+  return {
+    face: rowQuad(plane, nearY, panelFar, -1.06, 1.06),
+    crown: rowQuad(plane, panelFar, farY, -1.06, 1.06),
+    depth: i / (bands.length - 2),
+  };
+});
+
+// Two service roads radiating from the vanishing point.
+const roads = [-0.46, 0.4].map((u) =>
+  rowQuad(plane, 892, 418, u - 0.028, u + 0.028),
+);
+
+const sun = mood === 'dusk' ? { x: 1148, y: 332, r: 46 } : { x: 1210, y: 196, r: 34 };
+const id = (name: string) => `${idPrefix}-${name}`;
+---
+
+<svg
+  class:list={['scene', `scene--${mood}`, className]}
+  viewBox="0 0 1600 900"
+  preserveAspectRatio="xMidYMid slice"
+  role="img"
+  aria-label="Illustration of a utility-scale solar plant at golden hour, rows of modules receding toward a distant escarpment, with a transmission line and acacia trees on the horizon."
+>
+  <defs>
+    <linearGradient id={id('sky')} x1="0" y1="0" x2="0.18" y2="1">
+      <stop offset="0%" stop-color="var(--sky-top)" />
+      <stop offset="52%" stop-color="var(--sky-mid)" />
+      <stop offset="88%" stop-color="var(--sky-low)" />
+      <stop offset="100%" stop-color="var(--sky-horizon)" />
+    </linearGradient>
+
+    <radialGradient id={id('glow')} cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="var(--sun-core)" stop-opacity="0.92" />
+      <stop offset="34%" stop-color="var(--sun-core)" stop-opacity="0.34" />
+      <stop offset="100%" stop-color="var(--sun-core)" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id={id('ground')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--ground-far)" />
+      <stop offset="100%" stop-color="var(--ground-near)" />
+    </linearGradient>
+
+    <linearGradient id={id('panel')} x1="0.1" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="var(--panel-shade)" />
+      <stop offset="58%" stop-color="var(--panel-base)" />
+      <stop offset="100%" stop-color="var(--panel-lit)" />
+    </linearGradient>
+
+    <linearGradient id={id('haze')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--sky-horizon)" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="var(--sky-horizon)" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id={id('vignette')} x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="var(--vignette)" stop-opacity="0.5" />
+      <stop offset="38%" stop-color="var(--vignette)" stop-opacity="0" />
+      <stop offset="74%" stop-color="var(--vignette)" stop-opacity="0" />
+      <stop offset="100%" stop-color="var(--vignette)" stop-opacity="0.72" />
+    </linearGradient>
+
+    <clipPath id={id('plant')}>
+      <!-- Plant boundary: the array stops short of the frame edges so the
+           surrounding landscape stays visible. -->
+      <polygon points={rowQuad(plane, 900, 414, -0.99, 0.99)} />
+    </clipPath>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="1600" height="900" fill={`url(#${id('sky')})`} />
+
+  <!-- Sun and atmospheric glow -->
+  <circle cx={sun.x} cy={sun.y} r={sun.r * 7.6} fill={`url(#${id('glow')})`} />
+  <circle cx={sun.x} cy={sun.y} r={sun.r} fill="var(--sun-core)" opacity="0.95" />
+
+  <!-- Distant escarpment, three ridges fading into haze -->
+  <path
+    d="M0 352 L168 330 L286 344 L430 312 L560 338 L690 322 L840 346 L980 318 L1118 340 L1272 316 L1420 338 L1600 322 L1600 410 L0 410Z"
+    fill="var(--ridge-far)"
+  />
+  <path
+    d="M0 372 L132 360 L262 374 L392 352 L528 372 L676 356 L812 378 L958 358 L1104 376 L1256 354 L1414 374 L1600 360 L1600 412 L0 412Z"
+    fill="var(--ridge-mid)"
+  />
+  <path
+    d="M0 392 L186 384 L340 394 L498 382 L648 396 L812 384 L972 397 L1142 385 L1312 396 L1468 386 L1600 394 L1600 414 L0 414Z"
+    fill="var(--ridge-near)"
+  />
+
+  <!-- Transmission line heading off toward the interconnection point -->
+  <g class="scene__line" stroke="var(--structure)" fill="none" stroke-width="1.6">
+    <path d="M1392 396 L1392 332 M1378 344 h28 M1381 356 h22" />
+    <path d="M1486 398 L1486 346 M1475 356 h22 M1478 366 h16" />
+    <path d="M1562 400 L1562 358 M1553 366 h18" />
+    <path d="M1392 340 Q1440 352 1486 352 Q1526 352 1562 362" opacity="0.72" />
+    <path d="M1392 352 Q1440 364 1486 362 Q1526 362 1562 370" opacity="0.52" />
+  </g>
+
+  <!-- Ground plane -->
+  <rect x="0" y="404" width="1600" height="496" fill={`url(#${id('ground')})`} />
+
+  <!-- Array -->
+  <g clip-path={`url(#${id('plant')})`}>
+    {
+      rows.map((row) => (
+        <>
+          <polygon points={row.face} fill={`url(#${id('panel')})`} opacity={0.92 - row.depth * 0.3} />
+          <polygon points={row.crown} fill="var(--panel-edge)" opacity={0.5 - row.depth * 0.34} />
+        </>
+      ))
+    }
+    {roads.map((road) => <polygon points={road} fill="var(--road)" opacity="0.55" />)}
+  </g>
+
+  <!-- Inverter / BESS containers beside the near service road -->
+  <g fill="var(--structure)" opacity="0.9">
+    <rect x={groundX(plane, 760, -0.2) - 54} y="708" width="108" height="34" rx="2" />
+    <rect x={groundX(plane, 760, -0.2) - 54} y="702" width="108" height="7" rx="1.5" fill="var(--structure-lit)" />
+    <rect x={groundX(plane, 648, 0.14) - 36} y="604" width="72" height="23" rx="2" />
+    <rect x={groundX(plane, 648, 0.14) - 36} y="600" width="72" height="5" rx="1.5" fill="var(--structure-lit)" />
+  </g>
+
+  <!-- Horizon haze, laid over the array so distant rows dissolve -->
+  <rect x="0" y="404" width="1600" height="132" fill={`url(#${id('haze')})`} />
+
+  <!-- Acacia silhouettes -->
+  <g fill="var(--silhouette)">
+    <path d="M118 404c0-4 7-5 10-10 4-7 1-14 8-18 6-4 14-2 19 3 5-6 15-7 21-2 7 5 6 13 12 17 5 3 11 4 11 10z" />
+    <path d="M160 404v-32h5v32z" />
+    <path d="M1292 404c0-3 5-4 7-7 3-5 1-10 6-13 4-3 10-1 13 2 4-4 11-5 15-1 5 3 4 9 9 12 3 2 7 3 7 7z" />
+    <path d="M1322 404v-22h4v22z" />
+  </g>
+
+  <!-- Depth grading -->
+  <rect width="1600" height="900" fill={`url(#${id('vignette')})`} />
+</svg>
+
+<style>
+  .scene {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .scene--dusk {
+    --sky-top: #071d2c;
+    --sky-mid: #10364a;
+    --sky-low: #5b5a4a;
+    --sky-horizon: #c58f4a;
+    --sun-core: #ffd9a0;
+    --ridge-far: #3f4a4a;
+    --ridge-mid: #2b3637;
+    --ridge-near: #1c2726;
+    --ground-far: #20291f;
+    --ground-near: #0c130d;
+    --panel-shade: #10222b;
+    --panel-base: #1c3a44;
+    --panel-lit: #7fa3a0;
+    --panel-edge: #d8c08a;
+    --road: #4a4435;
+    --structure: #20302c;
+    --structure-lit: #8ba291;
+    --silhouette: #0c1310;
+    --vignette: #030a07;
+  }
+
+  .scene--day {
+    --sky-top: #0d2b3e;
+    --sky-mid: #24607d;
+    --sky-low: #7fa8b8;
+    --sky-horizon: #d6dfd8;
+    --sun-core: #ffffff;
+    --ridge-far: #7e9490;
+    --ridge-mid: #5e7572;
+    --ridge-near: #445854;
+    --ground-far: #44512f;
+    --ground-near: #1d2718;
+    --panel-shade: #16303c;
+    --panel-base: #214a58;
+    --panel-lit: #9dc3c4;
+    --panel-edge: #e8f0ea;
+    --road: #8d8468;
+    --structure: #2c3d36;
+    --structure-lit: #cfdcd1;
+    --silhouette: #16231c;
+    --vignette: #061309;
+  }
+</style>

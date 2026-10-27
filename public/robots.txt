@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yalaenergy.co.zm/sitemap-index.xml

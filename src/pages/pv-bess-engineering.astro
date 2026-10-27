@@ -1,0 +1,478 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Photo from '../components/Photo.astro';
+import PhotoFigure from '../components/PhotoFigure.astro';
+import SystemDiagram from '../components/SystemDiagram.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Arrow from '../components/Arrow.astro';
+import { SERVICES_PAGE, SERVICES, DELIVERABLES, TOOLING } from '../data/services';
+
+const description =
+  'Solar PV design and simulation, battery energy storage assessment, technical-commercial modelling and project development support for developers, project owners, EPC contractors and investors.';
+---
+
+<BaseLayout
+  title="PV & BESS Engineering, Design and Consulting"
+  description={description}
+  path="/pv-bess-engineering/"
+  schema={[
+    {
+      '@type': 'Service',
+      '@id': 'https://yalaenergy.co.zm/pv-bess-engineering/#service',
+      name: 'PV & BESS engineering, design and consulting',
+      serviceType: 'Solar PV and battery energy storage engineering consulting',
+      provider: { '@id': 'https://yalaenergy.co.zm/#organization' },
+      description,
+      areaServed: [
+        { '@type': 'Country', name: 'Zambia' },
+        { '@type': 'Place', name: 'Africa' },
+      ],
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'PV & BESS engineering services',
+        itemListElement: SERVICES.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: { '@type': 'Service', name: service.title, description: service.lede },
+        })),
+      },
+    },
+  ]}
+>
+  <!-- ===================== Hero ===================== -->
+  <section class="page-hero" aria-labelledby="services-title">
+    <div class="page-hero__media" aria-hidden="true">
+      <Photo photo="module" fill priority sizes="100vw" fallbackMood="day" idPrefix="svchero" />
+    </div>
+    <div class="shell page-hero__inner">
+      <p class="eyebrow">PV & BESS Engineering, Design and Consulting</p>
+      <h1 class="title-xl page-hero__title" id="services-title">{SERVICES_PAGE.heroHeadline}</h1>
+      <p class="page-hero__lede">{SERVICES_PAGE.heroLede}</p>
+      <div class="cluster">
+        <a class="btn btn--accent" href="#enquiry">
+          Request a PV & BESS Assessment
+          <Arrow />
+        </a>
+        <a class="btn btn--ghost" href="#deliverables">
+          See the deliverables
+          <Arrow />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Positioning ===================== -->
+  <section class="stage stage--tight stage--paper" aria-labelledby="positioning-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="lead stack stack--sm" data-reveal>
+          <p class="eyebrow">What this is</p>
+          <h2 class="title-sm" id="positioning-title">Engineering-informed consulting, scoped in writing.</h2>
+        </div>
+        <div class="body-wide prose" data-reveal>
+          <p>{SERVICES_PAGE.positioning}</p>
+          <p>
+            Who this is for: developers who need a configuration tested before they commit land or
+            capital; project owners who need an independent read on a design someone else produced;
+            EPC contractors who need yield and layout assumptions checked before pricing; and
+            investors who need the engineering case translated into commercial terms they can
+            interrogate.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Evidence band ===================== -->
+  <section class="stage stage--tight stage--paper stage--flush-top" aria-label="Plant photography">
+    <div class="shell">
+      <div class="evidence" data-reveal>
+        <PhotoFigure
+          photo="aerial"
+          ratio="ratio--21x9"
+          sizes="100vw"
+          widths={[960, 1440, 1920, 2560]}
+          fallbackMood="day"
+        >
+          Layout, row pitch, land use and the position of the collection infrastructure are the
+          outputs of the design work on this page — decided in a model long before anything is
+          built.
+        </PhotoFigure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Services ===================== -->
+  <section class="stage stage--sunken" id="services" aria-labelledby="services-list-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Services"
+        title="Four scopes. Each with a stated boundary."
+        titleClass="title-lg"
+        id="services-list-title"
+        split
+      >
+        <p>
+          Every scope below says what it includes and, just as importantly, where it stops and what
+          a separate specialist scope would be needed for.
+        </p>
+      </SectionHead>
+
+      <div class="services" data-reveal-group>
+        {
+          SERVICES.map((service) => (
+            <article class="service" id={service.id} data-reveal>
+              <div class="service__head">
+                <p class="service__index">{service.index}</p>
+                <h3 class="title-md">{service.title}</h3>
+                <p class="service__lede">{service.lede}</p>
+              </div>
+
+              <div class="service__detail">
+                <div>
+                  <h4 class="service__sub">In scope</h4>
+                  <ul class="ticks">
+                    {service.scope.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="service__boundary">
+                  <h4 class="service__sub">Boundary of this scope</h4>
+                  <p>{service.boundary}</p>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Concepts diagram ===================== -->
+  <section class="stage stage--ink stage--grid-texture" aria-labelledby="concepts-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="The system we model"
+        title="Where each decision changes the outcome."
+        titleClass="title-lg"
+        id="concepts-title"
+        split
+      >
+        <p>
+          The same concept model we use on our own project. Select an element to see the decisions
+          it drives and the figures that depend on them.
+        </p>
+      </SectionHead>
+
+      <div class="services__diagram" data-reveal>
+        <SystemDiagram />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Deliverables ===================== -->
+  <section class="stage stage--paper" id="deliverables" aria-labelledby="deliverables-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Deliverables"
+        title="What you actually receive."
+        titleClass="title-lg"
+        id="deliverables-title"
+        split
+      >
+        <p>
+          Deliverables are confirmed in the scope of work for each engagement. We only offer what we
+          can competently produce and are permitted to distribute.
+        </p>
+      </SectionHead>
+
+      <ol class="deliverables plain" data-reveal-group>
+        {
+          DELIVERABLES.map((item, index) => (
+            <li class="deliverable" data-reveal>
+              <p class="deliverable__index">{String(index + 1).padStart(2, '0')}</p>
+              <div>
+                <h3 class="title-xs">{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== Tooling ===================== -->
+  <section class="stage stage--raised" id="tooling" aria-labelledby="tooling-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">{TOOLING.title}</p>
+          <h2 class="title-md" id="tooling-title">The tools, described accurately.</h2>
+          <div class="prose">
+            <p class="tooling__statement">{TOOLING.statement}</p>
+            <p>{TOOLING.role}</p>
+          </div>
+        </div>
+
+        <aside class="half-end" data-reveal aria-label="Software licensing position">
+          <div class="note-panel">
+            <p class="note-panel__title">Our position on software and claims</p>
+            <ul class="ticks ticks--dash">
+              {TOOLING.disclaimers.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Engagement ===================== -->
+  <section class="stage stage--forest" aria-labelledby="engagement-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="How an engagement runs"
+        title="Four steps, no surprises."
+        titleClass="title-lg"
+        id="engagement-title"
+        split
+      >
+        <p>
+          Short, predictable and documented. Most feasibility-level engagements are measured in
+          weeks, not months — the timeline is agreed before any work starts.
+        </p>
+      </SectionHead>
+
+      <div class="columns engagement" data-reveal-group>
+        <article class="rule-card" data-reveal>
+          <p class="rule-card__index">01</p>
+          <h3 class="title-xs">Scoping call</h3>
+          <p>
+            We establish what decision the analysis has to support, what data exists, and what is
+            genuinely needed. If the honest answer is that you need a different specialist, we say
+            so.
+          </p>
+        </article>
+        <article class="rule-card" data-reveal>
+          <p class="rule-card__index">02</p>
+          <h3 class="title-xs">Written scope and inputs register</h3>
+          <p>
+            A fixed scope, named deliverables, declared assumptions and a list of the inputs we
+            need from you. Nothing starts until this is agreed.
+          </p>
+        </article>
+        <article class="rule-card" data-reveal>
+          <p class="rule-card__index">03</p>
+          <h3 class="title-xs">Modelling and review</h3>
+          <p>
+            Scenarios are built, compared and challenged internally, then walked through with you
+            before the report is finalised.
+          </p>
+        </article>
+        <article class="rule-card" data-reveal>
+          <p class="rule-card__index">04</p>
+          <h3 class="title-xs">Report and next-stage recommendations</h3>
+          <p>
+            The deliverables, the assumptions register, the risks we found, and a clear statement
+            of which studies should come next and why.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Enquiry ===================== -->
+  <section class="stage stage--paper" id="enquiry" aria-labelledby="enquiry-title">
+    <div class="shell">
+      <div class="enquiry">
+        <div class="enquiry__intro stack stack--lg" data-reveal>
+          <p class="eyebrow">Request an assessment</p>
+          <h2 class="title-lg" id="enquiry-title">Tell us about the project.</h2>
+          <div class="prose">
+            <p>
+              The more you can tell us about capacity, location and the decision you are facing, the
+              more useful our first reply will be. We will come back with a proposed scope, the
+              inputs we would need, and an indicative timeline.
+            </p>
+          </div>
+          <div class="note-panel">
+            <p class="note-panel__title">Before you write</p>
+            <ul class="ticks ticks--dash">
+              <li>Please do not send confidential or commercially sensitive material through this form.</li>
+              <li>We will respond to qualified enquiries within five working days.</li>
+              <li>Preliminary, feasibility-level work only — detailed design requires a licensed design authority.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="enquiry__form" data-reveal>
+          <EnquiryForm formId="engineering" submitLabel="Request a PV & BESS Assessment" id="engineering-enquiry" />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* --- Services --- */
+  .services {
+    display: grid;
+    gap: 0;
+    margin-block-start: var(--space-2xl);
+  }
+
+  .service {
+    display: grid;
+    gap: var(--space-lg) var(--gutter);
+    padding-block: var(--space-2xl);
+    border-block-start: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--header-height) + 2rem);
+  }
+
+  .service:last-child {
+    border-block-end: 1px solid var(--rule);
+  }
+
+  @media (min-width: 62rem) {
+    .service {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+      align-items: start;
+    }
+  }
+
+  .service__head {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+  }
+
+  .service__index {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+  }
+
+  .service__lede {
+    max-width: 42ch;
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .service__detail {
+    display: grid;
+    gap: var(--space-lg) var(--gutter);
+  }
+
+  @media (min-width: 44rem) {
+    .service__detail {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .service__sub {
+    margin-block-end: var(--space-sm);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .service__boundary {
+    padding-inline-start: var(--space-lg);
+    border-inline-start: 2px solid var(--signal-amber);
+  }
+
+  .service__boundary p {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--2);
+    line-height: 1.6;
+  }
+
+  .services__diagram {
+    margin-block-start: var(--space-2xl);
+  }
+
+  /* --- Deliverables --- */
+  .deliverables {
+    display: grid;
+    gap: var(--space-xl) var(--gutter);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+    margin-block-start: var(--space-2xl);
+  }
+
+  .deliverable {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    gap: 0 var(--space-md);
+    align-content: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .deliverable__index {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+    padding-block-start: 0.35em;
+  }
+
+  .deliverable h3 {
+    margin-block-end: 0.4rem;
+  }
+
+  .deliverable p {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--2);
+    line-height: 1.6;
+  }
+
+  /* --- Tooling --- */
+  .tooling__statement {
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 500;
+    letter-spacing: var(--tracking-tight);
+    line-height: 1.36;
+  }
+
+  .engagement {
+    margin-block-start: var(--space-2xl);
+  }
+
+  /* --- Enquiry --- */
+  .enquiry {
+    display: grid;
+    gap: var(--space-2xl) var(--gutter);
+  }
+
+  @media (min-width: 64rem) {
+    .enquiry {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      align-items: start;
+    }
+  }
+
+  .enquiry__form {
+    padding: var(--space-xl);
+    border: 1px solid var(--rule);
+    background: var(--surface-raised);
+  }
+
+  @media (max-width: 36rem) {
+    .enquiry__form {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+</style>

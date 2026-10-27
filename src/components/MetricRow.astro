@@ -1,0 +1,46 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import type { Metric } from '../data/types';
+
+interface Props {
+  metrics: readonly Metric[];
+  /** Show the verification status beneath each metric. */
+  showStatus?: boolean;
+  class?: string;
+}
+
+const { metrics, showStatus = true, class: className = '' } = Astro.props;
+
+/** Decimal places needed so the count-up lands on the authored value. */
+const decimalsFor = (n: number) => (Number.isInteger(n) ? 0 : 1);
+
+/**
+ * Ranges such as "40–60" are never animated: counting up to the upper bound
+ * would read as a single figure mid-flight, which is exactly the kind of
+ * overstatement this site avoids. Only single values count up.
+ */
+const animatable = (metric: Metric) =>
+  metric.numeric !== undefined && !/[–—-]/.test(metric.value);
+---
+
+<div class:list={['metric-row', className]} data-reveal-group>
+  {
+    metrics.map((metric) => (
+      <div class="metric" data-reveal>
+        <p class="metric__value">
+          <span
+            data-count-to={animatable(metric) ? metric.numeric : undefined}
+            data-count-decimals={animatable(metric) ? decimalsFor(metric.numeric!) : undefined}
+            data-count-prefix={animatable(metric) ? (metric.prefix ?? '') : undefined}
+          >
+            {metric.prefix}{metric.value}
+          </span>
+          {metric.unit && <span class="metric__unit">{metric.unit}</span>}
+        </p>
+        <p class="metric__label">{metric.label}</p>
+        {showStatus && <StatusBadge status={metric.status} />}
+        <p class="metric__note">{metric.note}</p>
+      </div>
+    ))
+  }
+</div>

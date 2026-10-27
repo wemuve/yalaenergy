@@ -1,0 +1,176 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import { STATUS_META } from '../data/types';
+import { CONTACT } from '../data/site';
+
+const statuses = (
+  ['confirmed', 'supplied', 'estimate', 'assumption', 'in-progress', 'outstanding'] as const
+).map((key) => ({ key, ...STATUS_META[key] }));
+---
+
+<LegalLayout
+  title="Information Accuracy"
+  description="How Yala Energy labels factual claims, estimates and assumptions on this website, and the limits of the information published here."
+  path="/information-accuracy/"
+  lede="Development-stage projects are built on a mix of documented fact, company information, estimates and assumptions. This page explains how we distinguish them, and what the information on this site can and cannot be used for."
+  updated="27 October 2026"
+>
+  <section>
+    <h2>Why this page exists</h2>
+    <p>
+      It is ordinary for a project website to present capacity, cost and yield figures as though
+      they were all equally settled. They never are. At early development stage, some numbers come
+      from documents, some from the company's own records, some from estimates and some from
+      working assumptions that will change.
+    </p>
+    <p>
+      Presenting them as one undifferentiated set of facts is how due diligence becomes expensive
+      and how trust gets lost. So every substantive claim on this site carries a status, and this
+      page says what each status means.
+    </p>
+  </section>
+
+  <section>
+    <h2>The labels</h2>
+    <dl class="accuracy-list">
+      {
+        statuses.map((item) => (
+          <div class="accuracy-list__row">
+            <dt><StatusBadge status={item.key} explain={false} /></dt>
+            <dd>{item.description}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section>
+    <h2>What is not claimed anywhere on this site</h2>
+    <p>
+      As at the last review of this content, the Muchenje Solar PV Plant does not have, and this
+      website does not claim it has:
+    </p>
+    <ul>
+      <li>A signed power purchase agreement, or an agreed tariff.</li>
+      <li>A generation licence or any other energy-sector authorisation.</li>
+      <li>Environmental or social approval, or a completed impact assessment.</li>
+      <li>A grid-connection agreement, or confirmed network capacity.</li>
+      <li>Financial close, committed debt, or a committed equity investor.</li>
+      <li>Bankability certification, or completed lender technical due diligence.</li>
+      <li>Procured equipment, or a contracted EPC provider.</li>
+      <li>A site-specific, independently reviewed energy-yield assessment.</li>
+    </ul>
+    <p>
+      The terms "shovel-ready" and "bankable" are not used of this project, because neither would
+      be accurate today.
+    </p>
+  </section>
+
+  <section>
+    <h2>Endorsements</h2>
+    <p>
+      No organisation named on this website endorses Yala Energy Limited or its projects. In
+      particular:
+    </p>
+    <ul>
+      <li>
+        References to ZESCO describe the network operator the project intends to connect to. There
+        is no agreement, arrangement or endorsement, and no approval has been granted.
+      </li>
+      <li>
+        References to RatedPower and Enverus describe software we use under licence. They do not
+        imply ownership, partnership, reseller status, certification or endorsement.
+      </li>
+      <li>
+        Organisations named in the leadership biographies are previous or current affiliations of
+        the individual concerned. They say nothing about Yala Energy.
+      </li>
+      <li>
+        References to World Bank Group, ESMAP and Solargis solar-resource mapping describe a public
+        data source used for preliminary screening only.
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Technical figures</h2>
+    <p>
+      Capacities, yields, line lengths, land areas and costs shown on this site are design
+      assumptions or estimates at concept stage unless they carry the "confirmed" label. They will
+      change as feasibility work, grid studies and equipment selection progress, and they are not
+      warranted as accurate, complete or current.
+    </p>
+    <p>
+      Where a storage figure is given in MWh it is an energy capacity, not a power rating in MW.
+      Where a generation figure is given in MWp it is peak DC capacity, not AC export capacity.
+      The two are routinely confused and we try hard not to add to it.
+    </p>
+  </section>
+
+  <section>
+    <h2>Not an offer, and not advice</h2>
+    <p>
+      Nothing on this website is an offer to sell, or a solicitation of an offer to buy, any
+      security or interest in any project or company. Nothing here is investment, legal,
+      engineering or tax advice, and nothing here should be relied on as the basis of an investment
+      or engineering decision.
+    </p>
+    <p>
+      Any investment or partnership would follow mutual due diligence, independent verification
+      and documented commercial terms.
+    </p>
+  </section>
+
+  <section>
+    <h2>Consulting outputs</h2>
+    <p>
+      The PV and BESS engineering services described on this site are preliminary and
+      feasibility-level unless a specific engagement scope says otherwise. They do not replace
+      detailed design, protection studies, grid-code compliance work, manufacturer validation or
+      the sign-off of a licensed design authority. Financial outputs are scenarios, not forecasts
+      or guarantees.
+    </p>
+  </section>
+
+  <section>
+    <h2>Imagery</h2>
+    <p>
+      Photographs on this site that are not of the Muchenje site are captioned as illustrative and
+      explicitly identified as not being the Muchenje site. Where no photograph is available, the
+      artwork is original illustration and is identified as such. No image on this site is
+      presented as a photograph of a built Yala Energy asset, because there is not yet one to
+      photograph.
+    </p>
+  </section>
+
+  <section>
+    <h2>Tell us if something is wrong</h2>
+    <p>
+      If you believe anything on this site is inaccurate, out of date or misleading, email
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>. We would rather correct it than
+      defend it.
+    </p>
+  </section>
+</LegalLayout>
+
+<style>
+  .accuracy-list {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .accuracy-list__row {
+    display: grid;
+    gap: 0.4rem 1.25rem;
+    padding-block-end: var(--space-md);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  @media (min-width: 40rem) {
+    .accuracy-list__row {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+</style>

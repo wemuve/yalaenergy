@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Photo from '../../components/Photo.astro';
+import MetricRow from '../../components/MetricRow.astro';
+import Arrow from '../../components/Arrow.astro';
+import { MUCHENJE, PROJECT_METRICS } from '../../data/project';
+
+const description =
+  'The Yala Energy development portfolio. The Muchenje Solar PV Plant is a proposed 20 MWp solar project with 40–60 MWh of battery storage in Chibombo District, Zambia, at early development stage.';
+---
+
+<BaseLayout
+  title="Projects"
+  description={description}
+  path="/projects/"
+  schema={[
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://yalaenergy.co.zm/projects/#webpage',
+      url: 'https://yalaenergy.co.zm/projects/',
+      name: 'Projects — Yala Energy',
+      description,
+      isPartOf: { '@id': 'https://yalaenergy.co.zm/#website' },
+    },
+  ]}
+>
+  <section class="page-hero" aria-labelledby="projects-title">
+    <div class="page-hero__media" aria-hidden="true">
+      <Photo photo="dusk" fill sizes="100vw" fallbackMood="dusk" idPrefix="projhero" />
+    </div>
+    <div class="shell page-hero__inner">
+      <p class="eyebrow">Development portfolio</p>
+      <h1 class="title-xl page-hero__title" id="projects-title">
+        One project, developed in the open.
+      </h1>
+      <p class="page-hero__lede">
+        Yala Energy has a single project in development. Rather than pad a portfolio page, this one
+        sets out exactly where Muchenje stands — what is secured, what is estimated, and what is
+        still to be done.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== Flagship entry ===================== -->
+  <section class="stage stage--paper" aria-labelledby="portfolio-title">
+    <div class="shell">
+      <SectionHead eyebrow="Current portfolio" title="Projects in development" titleClass="title-md" id="portfolio-title" split>
+        <p>
+          A single-asset project company structure is intended for Muchenje, which is the normal
+          approach for a project that will carry its own financing.
+        </p>
+      </SectionHead>
+
+      <article class="project-entry" data-reveal>
+        <a class="project-entry__media" href={`/projects/${MUCHENJE.slug}/`} aria-label={`${MUCHENJE.name} — project detail`}>
+          <Photo
+            photo="aerial"
+            ratio="ratio--3x2"
+            sizes="(min-width: 60rem) 48vw, 100vw"
+            fallbackMood="day"
+            idPrefix="projcard"
+          />
+        </a>
+
+        <div class="project-entry__body">
+          <div class="project-entry__head">
+            <h3 class="title-md">
+              <a href={`/projects/${MUCHENJE.slug}/`}>{MUCHENJE.name}</a>
+            </h3>
+            <p class="project-entry__place">
+              {MUCHENJE.location.area}, {MUCHENJE.location.district},
+              {' '}{MUCHENJE.location.province}, {MUCHENJE.location.country}
+            </p>
+            <StatusBadge status="confirmed" />
+          </div>
+
+          <p class="project-entry__summary">{MUCHENJE.summary}</p>
+
+          <dl class="project-entry__facts">
+            <div><dt>Proposed PV capacity</dt><dd>20 MWp</dd></div>
+            <div><dt>Proposed storage</dt><dd>40–60 MWh</dd></div>
+            <div><dt>Project stage</dt><dd>{MUCHENJE.stage}</dd></div>
+            <div><dt>Target design life</dt><dd>25 years</dd></div>
+          </dl>
+
+          <a class="btn" href={`/projects/${MUCHENJE.slug}/`}>
+            Open the project detail
+            <Arrow />
+          </a>
+        </div>
+      </article>
+
+      <p class="micro-note projects__note" data-reveal>
+        Yala Energy is actively screening further sites in Zambia. Nothing is listed here until
+        there is something substantive to describe — a site under assessment is not a project.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== Headline parameters ===================== -->
+  <section class="stage stage--ink stage--grid-texture" aria-labelledby="params-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Muchenje · headline parameters"
+        title="What the project concept proposes."
+        titleClass="title-lg"
+        id="params-title"
+        split
+      >
+        <p>
+          These are the parameters of the current concept. They will move as feasibility work,
+          grid studies and equipment selection progress — which is normal at this stage, and the
+          reason each figure is labelled.
+        </p>
+      </SectionHead>
+      <MetricRow metrics={PROJECT_METRICS} class="projects__metrics" />
+    </div>
+  </section>
+
+  <!-- ===================== Investment ===================== -->
+  <section class="stage stage--paper" id="investment" aria-labelledby="projects-invest-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">Investment and commercial information</p>
+          <h2 class="title-lg" id="projects-invest-title">
+            What a partner would be coming into.
+          </h2>
+          <div class="prose">
+            <p>{MUCHENJE.commercial.objective}</p>
+            <p>{MUCHENJE.commercial.capexNote}</p>
+            <p>{MUCHENJE.commercial.tariffNote}</p>
+          </div>
+          <a class="btn btn--accent" href="/contact/#enquiry">
+            Make an investment enquiry
+            <Arrow />
+          </a>
+        </div>
+
+        <aside class="half-end" data-reveal aria-label="Due diligence expectations">
+          <div class="note-panel">
+            <p class="note-panel__title">What we will expect to go through with you</p>
+            <ul class="ticks ticks--dash">
+              <li>Land documentation, title and the claimed leasehold interest.</li>
+              <li>Site-specific resource data and an independent yield assessment.</li>
+              <li>Grid-connection feasibility and the network operator's study outputs.</li>
+              <li>Storage sizing against a defined operating profile.</li>
+              <li>A rebuilt CAPEX estimate from current equipment and EPC pricing.</li>
+              <li>Licensing, environmental and social approval pathways and their timelines.</li>
+              <li>Offtake options and the tariff framework that applies to them.</li>
+            </ul>
+            <p class="micro-note">
+              No information memorandum, financial model or data room is published on this website.
+              Material is shared on request, under confidentiality, with parties who identify
+              themselves.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage stage--tight stage--sunken" aria-labelledby="projects-cta-title">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <div class="stack stack--sm">
+          <h2 class="title-md" id="projects-cta-title">Assessing this project?</h2>
+          <p class="cta-band__note">
+            Tell us who you are and what you need to see. We will tell you what exists today and
+            what is still being produced.
+          </p>
+        </div>
+        <a class="btn" href="/contact/#enquiry">
+          Request project information
+          <Arrow />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .project-entry {
+    display: grid;
+    gap: var(--space-xl) var(--gutter);
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-xl);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  @media (min-width: 60rem) {
+    .project-entry {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      align-items: start;
+    }
+  }
+
+  .project-entry__media {
+    display: block;
+    border-radius: var(--radius-xs);
+    overflow: hidden;
+  }
+
+  .project-entry__media .bleed {
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+
+  .project-entry__media:hover .bleed {
+    transform: scale(1.025);
+  }
+
+  .project-entry__body {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+  }
+
+  .project-entry__head {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+  }
+
+  .project-entry__head a {
+    text-decoration: none;
+  }
+
+  .project-entry__head a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--lime-500);
+    text-decoration-thickness: 3px;
+  }
+
+  .project-entry__place {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+
+  .project-entry__summary {
+    max-width: 60ch;
+    margin: 0;
+    color: var(--text-body);
+    line-height: 1.62;
+  }
+
+  .project-entry__facts {
+    display: grid;
+    gap: 0;
+    width: 100%;
+    margin: 0;
+    border-block-start: 1px solid var(--rule);
+  }
+
+  @media (min-width: 34rem) {
+    .project-entry__facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .project-entry__facts > div {
+    display: grid;
+    gap: 0.2rem;
+    padding-block: var(--space-sm);
+    padding-inline-end: var(--space-md);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  .project-entry__facts dt {
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .project-entry__facts dd {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    font-weight: 600;
+  }
+
+  .projects__note {
+    margin-block-start: var(--space-xl);
+  }
+
+  .projects__metrics {
+    margin-block-start: var(--space-2xl);
+  }
+</style>
