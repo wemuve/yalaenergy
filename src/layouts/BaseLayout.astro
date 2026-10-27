@@ -1,0 +1,156 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { BRAND } from '../data/site';
+
+interface Props {
+  /** Page title without the brand suffix. */
+  title: string;
+  description: string;
+  /** Path of the page, used for the canonical URL. */
+  path: string;
+  /** Overrides the default social share image. */
+  ogImage?: string;
+  /** `article` for project pages, otherwise `website`. */
+  ogType?: 'website' | 'article';
+  /** Additional JSON-LD graph nodes for this page. */
+  schema?: Record<string, unknown>[];
+  /** Pages excluded from indexing (currently only the 404). */
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogImage = '/og/yala-energy-default.png',
+  ogType = 'website',
+  schema = [],
+  noindex = false,
+  bodyClass = '',
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://yalaenergy.co.zm');
+const canonical = new URL(path, site).href;
+const ogImageUrl = new URL(ogImage, site).href;
+const fullTitle = `${title} | ${BRAND.name}`;
+
+/**
+ * Structured data is deliberately minimal and limited to things that are
+ * verifiably true: who the organisation is, where the pages sit in the
+ * hierarchy, and what services are described. No ratings, no founding claims
+ * beyond what the company has stated, no awards, no fabricated reviews.
+ */
+const organisation = {
+  '@type': 'Organization',
+  '@id': new URL('/#organization', site).href,
+  name: BRAND.legalName,
+  alternateName: BRAND.name,
+  url: site.href,
+  slogan: BRAND.slogan,
+  description:
+    'Yala Energy Limited is a Zambian renewable-energy project developer and PV & BESS engineering consultancy, developing the proposed Muchenje Solar PV Plant in Chibombo District.',
+  logo: new URL('/og/yala-energy-logo.png', site).href,
+  email: 'info@yalaenergy.co.zm',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Suite No. 2, Manda Hill Shopping Centre',
+    addressLocality: 'Lusaka',
+    addressCountry: 'ZM',
+  },
+  areaServed: { '@type': 'Country', name: 'Zambia' },
+  knowsAbout: [
+    'Solar photovoltaic project development',
+    'Battery energy storage systems',
+    'Grid interconnection',
+    'Energy yield simulation',
+  ],
+};
+
+const webSite = {
+  '@type': 'WebSite',
+  '@id': new URL('/#website', site).href,
+  url: site.href,
+  name: BRAND.name,
+  publisher: { '@id': new URL('/#organization', site).href },
+  inLanguage: 'en',
+};
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [organisation, webSite, ...schema],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/og/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#0a2318" />
+
+    <!-- Self-hosted fonts, preloaded so the display face is ready for the
+         largest text on the page and no layout shift follows. -->
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={BRAND.legalName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} is:inline />
+
+    <!-- Marks the document as script-capable before first paint. Components
+         that have a no-JavaScript layout key off this, so there is no flash of
+         the fallback state. Two lines, deliberately inline and blocking. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+
+    <script>
+      import '../scripts/main';
+    </script>
+  </head>
+
+  <body class={bodyClass}>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <SiteHeader currentPath={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

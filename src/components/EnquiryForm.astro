@@ -1,0 +1,185 @@
+---
+import Arrow from './Arrow.astro';
+import {
+  FORM_SCHEMAS,
+  HONEYPOT_FIELD,
+  TIMESTAMP_FIELD,
+} from '../lib/enquiry.mjs';
+
+interface Props {
+  /** Which schema to render: `contact` or `engineering`. */
+  formId: 'contact' | 'engineering';
+  submitLabel: string;
+  /** Pre-selects the route on the contact form. */
+  preselect?: Record<string, string>;
+  id?: string;
+}
+
+const { formId, submitLabel, preselect = {}, id = `${formId}-form` } = Astro.props;
+
+const schema = FORM_SCHEMAS[formId] ?? [];
+
+/**
+ * Submission endpoint. When this is empty the form runs in DEMO MODE: it
+ * validates, then tells the visitor plainly that nothing was sent. The site
+ * never pretends an enquiry was delivered. See README → "Contact forms".
+ */
+const endpoint = (import.meta.env.PUBLIC_ENQUIRY_ENDPOINT ?? '').trim();
+const isDemo = endpoint === '';
+
+const mailSubject =
+  formId === 'engineering'
+    ? 'PV & BESS assessment request'
+    : 'Website enquiry';
+---
+
+<form
+  class="form"
+  id={id}
+  method="post"
+  action={`mailto:info@yalaenergy.co.zm?subject=${encodeURIComponent(mailSubject)}`}
+  data-enquiry-form={formId}
+  data-endpoint={endpoint}
+>
+  {
+    isDemo && (
+      <p class="form__notice" role="note">
+        <strong>Demo mode.</strong>{' '}This deployment has no submission endpoint configured, so
+        this form validates your entries but{' '}
+        <strong>does not send anything to anyone</strong>. Please email{' '}
+        <a href="mailto:info@yalaenergy.co.zm">info@yalaenergy.co.zm</a>{' '}directly. Site
+        operators: set <code>PUBLIC_ENQUIRY_ENDPOINT</code> to go live.
+      </p>
+    )
+  }
+
+  <p class="form__notice" data-nojs-note>
+    <strong>JavaScript is off.</strong>{' '}Submitting will open your email client with this form's
+    subject line prefilled. You can also email{' '}
+    <a href="mailto:info@yalaenergy.co.zm">info@yalaenergy.co.zm</a>{' '}directly.
+  </p>
+
+  <div class="form__grid">
+    {
+      schema.map((field) => {
+        const errorId = `${id}-${field.name}-error`;
+        const hintId = `${id}-${field.name}-hint`;
+        const describedBy = [field.hint ? hintId : null].filter(Boolean).join(' ') || undefined;
+
+        if (field.type === 'radio') {
+          return (
+            <fieldset class:list={['field', field.wide && 'field--wide']}>
+              <legend class="radio-group__legend">
+                {field.label}
+                {!field.required && <span class="field__optional">(optional)</span>}
+              </legend>
+              <div class="radio-group">
+                {(field.options ?? []).map((option) => (
+                  <label class="choice">
+                    <input
+                      type="radio"
+                      name={field.name}
+                      value={option}
+                      required={field.required}
+                      checked={preselect[field.name] === option}
+                      aria-describedby={errorId}
+                    />
+                    <span>{option}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="field__error" id={errorId} data-error-for={field.name} aria-live="polite"></p>
+            </fieldset>
+          );
+        }
+
+        return (
+          <div class:list={['field', field.wide && 'field--wide']}>
+            <label class="field__label" for={`${id}-${field.name}`}>
+              {field.label}
+              {!field.required && <span class="field__optional">(optional)</span>}
+            </label>
+            {field.hint && (
+              <p class="field__hint" id={hintId}>
+                {field.hint}
+              </p>
+            )}
+
+            {field.type === 'textarea' && (
+              <textarea
+                class="field__control"
+                id={`${id}-${field.name}`}
+                name={field.name}
+                rows="5"
+                required={field.required}
+                maxlength={field.maxLength}
+                aria-describedby={describedBy}
+              />
+            )}
+
+            {field.type === 'select' && (
+              <select
+                class="field__control"
+                id={`${id}-${field.name}`}
+                name={field.name}
+                required={field.required}
+                aria-describedby={describedBy}
+              >
+                <option value="">Please choose…</option>
+                {(field.options ?? []).map((option) => (
+                  <option value={option} selected={preselect[field.name] === option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {(field.type === 'text' || field.type === 'email') && (
+              <input
+                class="field__control"
+                id={`${id}-${field.name}`}
+                type={field.type === 'email' ? 'email' : 'text'}
+                name={field.name}
+                required={field.required}
+                maxlength={field.maxLength}
+                autocomplete={field.autocomplete}
+                aria-describedby={describedBy}
+              />
+            )}
+
+            <p class="field__error" id={errorId} data-error-for={field.name} aria-live="polite"></p>
+          </div>
+        );
+      })
+    }
+  </div>
+
+  <div class="consent">
+    <input type="checkbox" id={`${id}-consent`} name="consent" value="yes" required />
+    <label for={`${id}-consent`}>
+      I understand that Yala Energy will use the details above only to respond to this enquiry, as
+      described in the <a href="/privacy/">privacy policy</a>. Please do not submit confidential or
+      commercially sensitive information through this form.
+    </label>
+  </div>
+  <p class="field__error" id={`${id}-consent-error`} data-error-for="consent" aria-live="polite"></p>
+
+  <!-- Spam controls. The honeypot is removed from the accessibility tree and
+       the tab order, so it only catches automated submissions. -->
+  <div class="honeypot" aria-hidden="true">
+    <label for={`${id}-${HONEYPOT_FIELD}`}>Leave this field empty</label>
+    <input id={`${id}-${HONEYPOT_FIELD}`} type="text" name={HONEYPOT_FIELD} tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name={TIMESTAMP_FIELD} value="0" />
+
+  <div class="form__actions">
+    <button class="btn btn--accent" type="submit" data-form-submit>
+      <span class="spinner" data-spinner hidden></span>
+      {submitLabel}
+      <Arrow />
+    </button>
+    <p class="form__footnote">We aim to respond to qualified enquiries within five working days.</p>
+  </div>
+
+  <div class="form__status" role="status" aria-live="polite" data-form-status></div>
+</form>

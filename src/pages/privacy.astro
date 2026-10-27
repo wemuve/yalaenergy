@@ -1,0 +1,146 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { CONTACT } from '../data/site';
+
+/**
+ * This policy describes what the site as built actually does. It is accurate
+ * for the current implementation: no analytics, no cookies, no third-party
+ * embeds and no tracking. If any of those are added later, this page has to be
+ * updated in the same change — see PRIVACY-1 in the verification checklist.
+ */
+---
+
+<LegalLayout
+  title="Privacy Policy"
+  description="How Yala Energy Limited handles personal information submitted through this website."
+  path="/privacy/"
+  lede="How Yala Energy Limited handles the personal information you give us through this website. Written to describe what this site actually does, not what a template assumes it does."
+  updated="27 October 2026"
+>
+  <section>
+    <h2>Who we are</h2>
+    <p>
+      Yala Energy Limited is a private company limited by shares, incorporated in Zambia. For any
+      question about this policy or about information we hold, email
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>.
+    </p>
+    <p>
+      A named data-protection contact and the company's registered address for data-protection
+      correspondence are to be confirmed before launch.
+    </p>
+  </section>
+
+  <section>
+    <h2>What this website collects</h2>
+    <p>
+      This website does not use analytics, advertising, behavioural tracking or third-party
+      embeds, and it sets no cookies of its own. There is no visitor profiling.
+    </p>
+    <p>
+      The only personal information this site collects is what you type into an enquiry form and
+      submit:
+    </p>
+    <ul>
+      <li>Your name and the company or organisation you represent.</li>
+      <li>Your business email address.</li>
+      <li>Your country and, on the engineering form, your project's location.</li>
+      <li>Project details you choose to provide: capacity, stage, service required, whether storage is in scope, and timeline.</li>
+      <li>The content of your message.</li>
+    </ul>
+    <p>
+      Each form also carries two anti-spam fields: a hidden field that genuine visitors never fill
+      in, and the time the form was rendered in your browser. Neither identifies you.
+    </p>
+  </section>
+
+  <section>
+    <h2>Browser storage</h2>
+    <p>
+      This site does not write cookies, <code>localStorage</code> or any other persistent browser
+      storage. Nothing about your visit is kept on your device between sessions by us.
+    </p>
+  </section>
+
+  <section>
+    <h2>Why we use it, and on what basis</h2>
+    <p>
+      We use what you send solely to read, assess and respond to your enquiry, and to carry on the
+      conversation that follows from it. The lawful basis is our legitimate interest in responding
+      to a business enquiry that you initiated, and taking steps at your request before entering
+      into any agreement.
+    </p>
+    <p>
+      We do not use enquiry details for marketing, we do not add you to a mailing list, and we do
+      not sell, rent or trade personal information.
+    </p>
+  </section>
+
+  <section>
+    <h2>Who can see it</h2>
+    <p>Enquiry content is seen by:</p>
+    <ul>
+      <li>Yala Energy personnel handling the relevant enquiry route.</li>
+      <li>Our email and form-handling providers, strictly as processors of the message in transit and at rest.</li>
+      <li>Professional advisers, where an enquiry needs legal, technical or financial input — and only to the extent needed.</li>
+    </ul>
+    <p>
+      Our providers may process and store data outside Zambia. The specific providers in use, and
+      the safeguards that apply to any transfer, are to be confirmed and listed here before launch.
+    </p>
+  </section>
+
+  <section>
+    <h2>How long we keep it</h2>
+    <p>
+      Enquiries that do not lead to a business relationship are deleted within 24 months. Where an
+      enquiry leads to a commercial relationship, correspondence is kept for as long as that
+      relationship lasts, plus the period required by Zambian company and tax law.
+    </p>
+  </section>
+
+  <section>
+    <h2>Your rights</h2>
+    <p>
+      You can ask us for a copy of the information we hold about you, ask us to correct it, ask us
+      to delete it, or object to our using it. Email
+      <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> and we will respond within 30 days.
+    </p>
+    <p>
+      If you are not satisfied with how we have handled your information, you may complain to the
+      relevant data-protection authority. Under Zambia's Data Protection Act, that is the Data
+      Protection Commissioner.
+    </p>
+  </section>
+
+  <section>
+    <h2>Security</h2>
+    <p>
+      This site is served over HTTPS. Form submissions are transmitted over an encrypted
+      connection, and no credential, API key or secret is present in anything delivered to your
+      browser.
+    </p>
+    <p>
+      No web form is the right channel for confidential or commercially sensitive material, and
+      every form on this site says so. Please email us and we will agree a secure route.
+    </p>
+  </section>
+
+  <section>
+    <h2>Demo mode</h2>
+    <p>
+      If this deployment has no submission endpoint configured, the forms run in a clearly labelled
+      demo mode: your entries are validated in your own browser and then discarded. Nothing is
+      transmitted and nothing is stored. The form tells you so on screen rather than implying a
+      message was delivered.
+    </p>
+  </section>
+
+  <section>
+    <h2>Changes</h2>
+    <p>
+      If this policy changes, the revised version is published here with a new "last updated" date.
+      Any change that materially affects how we use information already given to us will be
+      notified directly to the people affected.
+    </p>
+  </section>
+</LegalLayout>

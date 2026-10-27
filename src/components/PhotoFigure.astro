@@ -1,0 +1,83 @@
+---
+import Photo from './Photo.astro';
+import { PHOTOS, type PhotoKey } from '../data/media';
+
+/**
+ * Photograph with its caption.
+ *
+ * The caption is not optional for images that are not of the Muchenje site:
+ * `src/data/media.ts` marks those `siteSpecific: false` and this component
+ * always prints their disclosure. An extra editorial line can be passed through
+ * the default slot and sits above it.
+ */
+interface Props {
+  photo: PhotoKey;
+  ratio?: string;
+  sizes?: string;
+  widths?: number[];
+  priority?: boolean;
+  fallbackMood?: 'dusk' | 'day';
+  class?: string;
+}
+
+const {
+  photo,
+  ratio = 'ratio--3x2',
+  sizes,
+  widths,
+  priority = false,
+  fallbackMood = 'dusk',
+  class: className = '',
+} = Astro.props;
+
+const meta = PHOTOS[photo];
+---
+
+<figure class:list={['photo-figure', className]}>
+  <Photo
+    photo={photo}
+    ratio={ratio}
+    sizes={sizes}
+    widths={widths}
+    priority={priority}
+    fallbackMood={fallbackMood}
+  />
+  <figcaption class="photo-figure__caption">
+    {Astro.slots.has('default') && <span class="photo-figure__lead"><slot /></span>}
+    <span class:list={[!meta.siteSpecific && 'photo-figure__disclosure']}>{meta.caption}</span>
+  </figcaption>
+</figure>
+
+<style>
+  .photo-figure {
+    margin: 0;
+  }
+
+  .photo-figure__caption {
+    display: grid;
+    gap: 0.25rem;
+    margin-block-start: var(--space-sm);
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.5;
+  }
+
+  .photo-figure__lead {
+    color: var(--text-body);
+  }
+
+  .photo-figure__disclosure {
+    padding-inline-start: 0.6rem;
+    border-inline-start: 2px solid var(--signal-amber);
+  }
+
+  :global(.stage--ink) .photo-figure__caption,
+  :global(.stage--forest) .photo-figure__caption {
+    color: var(--forest-300);
+  }
+
+  :global(.stage--ink) .photo-figure__lead,
+  :global(.stage--forest) .photo-figure__lead {
+    color: var(--text-on-ink-muted);
+  }
+</style>

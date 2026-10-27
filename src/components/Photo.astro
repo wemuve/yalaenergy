@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import SolarFieldScene from './SolarFieldScene.astro';
+import { PHOTOS, type PhotoKey } from '../data/media';
+
+/**
+ * Editorial photograph with an automatic vector fallback.
+ *
+ * Looks the image up in `src/assets/media/` at build time. When it is there,
+ * Astro emits AVIF/WebP with intrinsic dimensions and a responsive `srcset`.
+ * When it is not, the illustrated scene stands in, so the layout is identical
+ * either way and a missing asset can never break a page or a build.
+ */
+interface Props {
+  photo: PhotoKey;
+  /** Aspect ratio class from the layout layer, e.g. `ratio--3x2`. */
+  ratio?: string;
+  /** Rendered width hint used to pick the generated sizes. */
+  widths?: number[];
+  sizes?: string;
+  /** Set on the single largest above-the-fold image only. */
+  priority?: boolean;
+  /** Mood of the fallback scene when the photograph is absent. */
+  fallbackMood?: 'dusk' | 'day';
+  /** Unique id prefix for the fallback scene's gradients. */
+  idPrefix?: string;
+  /** Fill the positioned parent instead of holding an aspect ratio. */
+  fill?: boolean;
+  class?: string;
+}
+
+const {
+  photo,
+  ratio = 'ratio--3x2',
+  widths = [640, 960, 1280, 1920],
+  sizes = '(min-width: 64rem) 55vw, 100vw',
+  priority = false,
+  fallbackMood = 'dusk',
+  idPrefix = `ph-${photo}`,
+  fill = false,
+  class: className = '',
+} = Astro.props;
+
+const meta = PHOTOS[photo];
+
+// Eagerly collected at build time; `import.meta.glob` tolerates an empty match,
+// which is what makes the "add the files later" workflow safe.
+const sources = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/media/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true },
+);
+const entry = sources[`/src/assets/media/${meta.file}`];
+---
+
+<div
+  class:list={[
+    'photo',
+    'bleed',
+    fill ? 'photo--fill' : ['ratio', ratio],
+    className,
+  ]}
+>
+  {
+    entry ? (
+      <Image
+        src={entry.default}
+        alt={meta.alt}
+        widths={widths}
+        sizes={sizes}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : 'auto'}
+        style={meta.focus ? `object-position:${meta.focus}` : undefined}
+      />
+    ) : (
+      <SolarFieldScene mood={fallbackMood} idPrefix={idPrefix} />
+    )
+  }
+</div>
+
+<style>
+  .photo {
+    background: var(--forest-900);
+  }
+
+  .photo--fill {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo :global(img),
+  .photo :global(svg) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

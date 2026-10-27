@@ -1,0 +1,513 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import Photo from '../../components/Photo.astro';
+import PhotoFigure from '../../components/PhotoFigure.astro';
+import MetricRow from '../../components/MetricRow.astro';
+import Timeline from '../../components/Timeline.astro';
+import SystemDiagram from '../../components/SystemDiagram.astro';
+import Arrow from '../../components/Arrow.astro';
+import { MUCHENJE, PROJECT_METRICS, PROJECT_TIMELINE } from '../../data/project';
+import { STATUS_META } from '../../data/types';
+
+const description =
+  'The proposed Muchenje Solar PV Plant: 20 MWp of solar PV with 40–60 MWh of battery storage and an approximately 8.2 km 33 kV evacuation line in Chibombo District, Zambia. Early development stage — technical summary, development programme and verification status.';
+
+/** The four status categories the project page is organised around. */
+const legend = (
+  ['confirmed', 'supplied', 'estimate', 'assumption', 'outstanding'] as const
+).map((key) => ({ key, ...STATUS_META[key] }));
+---
+
+<BaseLayout
+  title="Muchenje Solar PV Plant"
+  description={description}
+  path="/projects/muchenje-solar-pv-plant/"
+  ogType="article"
+  schema={[
+    {
+      '@type': 'WebPage',
+      '@id': 'https://yalaenergy.co.zm/projects/muchenje-solar-pv-plant/#webpage',
+      url: 'https://yalaenergy.co.zm/projects/muchenje-solar-pv-plant/',
+      name: 'Muchenje Solar PV Plant — Yala Energy',
+      description,
+      isPartOf: { '@id': 'https://yalaenergy.co.zm/#website' },
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://yalaenergy.co.zm/' },
+          { '@type': 'ListItem', position: 2, name: 'Projects', item: 'https://yalaenergy.co.zm/projects/' },
+          { '@type': 'ListItem', position: 3, name: 'Muchenje Solar PV Plant' },
+        ],
+      },
+    },
+  ]}
+>
+  <!-- ===================== Hero ===================== -->
+  <section class="page-hero project-hero" aria-labelledby="project-title">
+    <div class="page-hero__media" aria-hidden="true">
+      <Photo photo="aerial" fill priority sizes="100vw" fallbackMood="dusk" idPrefix="mhero" />
+    </div>
+    <div class="shell page-hero__inner">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <ol class="plain">
+          <li><a href="/">Home</a></li>
+          <li><a href="/projects/">Projects</a></li>
+          <li aria-current="page">{MUCHENJE.name}</li>
+        </ol>
+      </nav>
+
+      <p class="eyebrow">{MUCHENJE.location.district} · {MUCHENJE.location.province} · Zambia</p>
+      <h1 class="title-xl page-hero__title" id="project-title">{MUCHENJE.name}</h1>
+      <p class="page-hero__lede">{MUCHENJE.summary}</p>
+
+      <dl class="page-hero__meta">
+        <div><dt>Stage</dt><dd>{MUCHENJE.stage}</dd></div>
+        <div><dt>Proposed capacity</dt><dd>20 MWp</dd></div>
+        <div><dt>Proposed storage</dt><dd>40–60 MWh</dd></div>
+      </dl>
+
+      <p class="project-hero__caveat">{MUCHENJE.stageNote}</p>
+    </div>
+  </section>
+
+  <!-- ===================== How to read this page ===================== -->
+  <section class="stage stage--tight stage--sunken" aria-labelledby="legend-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="lead stack stack--sm" data-reveal>
+          <p class="eyebrow">How to read this page</p>
+          <h2 class="title-sm" id="legend-title">Every claim carries its status.</h2>
+          <p class="micro-note">
+            Development-stage projects are built on a mix of documented fact, sponsor information,
+            estimates and assumptions. Presenting them as one undifferentiated set of "facts" is
+            how due diligence gets expensive later, so they are separated here.
+          </p>
+        </div>
+        <ul class="legend body-wide plain" data-reveal>
+          {
+            legend.map((item) => (
+              <li class="legend__item">
+                <StatusBadge status={item.key} explain={false} />
+                <span>{item.description}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== At a glance ===================== -->
+  <section class="stage stage--paper" aria-labelledby="mglance-title">
+    <div class="shell">
+      <SectionHead eyebrow="At a glance" title="The project concept in four numbers." titleClass="title-md" id="mglance-title" />
+      <MetricRow metrics={PROJECT_METRICS} class="muchenje__metrics" />
+    </div>
+  </section>
+
+  <!-- ===================== Technical summary ===================== -->
+  <section class="stage stage--raised" id="technical" aria-labelledby="technical-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Technical summary"
+        title="Full parameter set, with status and verification note."
+        titleClass="title-lg"
+        id="technical-title"
+        split
+      >
+        <p>
+          This is the complete set of parameters for the current concept. Where a figure is an
+          assumption or an estimate, the note says what would be needed to firm it up.
+        </p>
+      </SectionHead>
+
+      <div class="spec-table-wrap muchenje__table" data-reveal>
+        <table class="spec-table">
+          <caption>
+            Muchenje Solar PV Plant — project concept parameters. Statuses as at the last review of
+            this website's content.
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Parameter</th>
+              <th scope="col">Value</th>
+              <th scope="col">Status</th>
+              <th scope="col">Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              MUCHENJE.technical.map((row) => (
+                <tr>
+                  <th scope="row">{row.parameter}</th>
+                  <td class="spec-table__value">{row.value}</td>
+                  <td><StatusBadge status={row.status} explain={false} /></td>
+                  <td class="spec-table__note">{row.note}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Scale band ===================== -->
+  <section class="stage stage--tight stage--paper stage--flush-top" aria-labelledby="scale-title">
+    <div class="shell">
+      <div class="grid12 scale-band">
+        <div class="lead stack stack--md" data-reveal>
+          <p class="eyebrow">Sense of scale</p>
+          <h2 class="title-sm" id="scale-title">What 20 MWp occupies.</h2>
+          <p class="micro-note">
+            Roughly 41 hectares of land is associated with the project, as stated by the company.
+            Final land use depends on the module technology, row pitch, tracking choice and the
+            setbacks the layout has to respect — all of which are part of the feasibility stage,
+            not yet settled.
+          </p>
+        </div>
+        <div class="body-wide" data-reveal>
+          <PhotoFigure
+            photo="array"
+            ratio="ratio--21x9"
+            sizes="(min-width: 56rem) 58vw, 100vw"
+            fallbackMood="day"
+          >
+            Ground-mounted modules at a comparable plant, looking along a single row.
+          </PhotoFigure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== System concept ===================== -->
+  <section class="stage stage--ink stage--grid-texture" id="system" aria-labelledby="system-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="System concept"
+        title="How the plant is intended to reach the network."
+        titleClass="title-lg"
+        id="system-title"
+        split
+      >
+        <p>
+          A concept-level single line, element by element. Select any element to see what it does
+          and which of the project's figures depend on it.
+        </p>
+      </SectionHead>
+
+      <div class="muchenje__diagram" data-reveal>
+        <SystemDiagram />
+      </div>
+
+      <p class="micro-note muchenje__diagram-note" data-reveal>
+        Indicative concept diagram only. It is not a single-line diagram for design or construction,
+        shows no protection, earthing or auxiliary systems, and does not represent an agreed
+        connection arrangement with any network operator.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== Solar resource ===================== -->
+  <section class="stage stage--paper" id="resource" aria-labelledby="resource-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">Solar resource</p>
+          <h2 class="title-lg" id="resource-title">A screening figure, not a yield assessment.</h2>
+          <div class="resource__figure">
+            <p class="resource__value">{MUCHENJE.solarResource.range}</p>
+            <p class="resource__metric">{MUCHENJE.solarResource.metric}</p>
+            <StatusBadge status={MUCHENJE.solarResource.status} />
+          </div>
+          <div class="prose">
+            <p>{MUCHENJE.solarResource.source}</p>
+          </div>
+        </div>
+
+        <aside class="half-end" data-reveal aria-label="Limitations of the resource figure">
+          <div class="note-panel">
+            <p class="note-panel__title">What this figure cannot be used for</p>
+            <p>{MUCHENJE.solarResource.limitation}</p>
+            <ul class="ticks ticks--dash">
+              <li>It is not an energy-yield estimate for this plant.</li>
+              <li>It carries its own uncertainty band, which is not stated here.</li>
+              <li>The exact data period and extraction coordinates must be declared before the figure is relied on commercially.</li>
+              <li>No resource map is published on this site, because publishing one without its metric, period, source and licence terms would be misleading.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Development programme ===================== -->
+  <section class="stage stage--sunken" id="programme" aria-labelledby="programme-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Development programme"
+        title="Five stages. We are at the start of the second."
+        titleClass="title-lg"
+        id="programme-title"
+        split
+      >
+        <p>
+          Each stage below carries its real status. No stage is marked complete on the strength of
+          intention, and the project is not described as shovel-ready or bankable, because neither
+          would be true today.
+        </p>
+      </SectionHead>
+
+      <div class="muchenje__timeline">
+        <Timeline stages={PROJECT_TIMELINE} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Commercial ===================== -->
+  <section class="stage stage--forest" id="commercial" aria-labelledby="commercial-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">Investment and commercial information</p>
+          <h2 class="title-lg" id="commercial-title">
+            The estimate, and what it would take to stand behind it.
+          </h2>
+          <div class="prose">
+            <p>{MUCHENJE.commercial.capexNote}</p>
+            <p>{MUCHENJE.commercial.tariffNote}</p>
+            <p>{MUCHENJE.commercial.objective}</p>
+          </div>
+        </div>
+
+        <aside class="half-end stack stack--lg" data-reveal aria-label="Validation required">
+          <div class="note-panel">
+            <p class="note-panel__title">Validation the CAPEX estimate requires</p>
+            <ul class="ticks ticks--dash">
+              <li>A current technical design at a defined level of detail.</li>
+              <li>Live equipment quotations for modules, inverters, storage and transformers.</li>
+              <li>Interconnection study outputs and the resulting grid works scope.</li>
+              <li>EPC pricing against a defined scope of works.</li>
+              <li>A reviewed financial model with stated assumptions and sensitivities.</li>
+            </ul>
+          </div>
+          <a class="btn btn--accent" href="/contact/#enquiry">
+            Make an investment enquiry
+            <Arrow />
+          </a>
+          <p class="micro-note">
+            Nothing on this page is an offer to sell or a solicitation of an offer to buy
+            securities, or investment advice. Any partnership would follow mutual due diligence and
+            documented commercial terms.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Not yet secured ===================== -->
+  <section class="stage stage--paper" aria-labelledby="outstanding-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Plain statement"
+        title="What this project does not have."
+        titleClass="title-md"
+        id="outstanding-title"
+        split
+      >
+        <p>
+          Stated once, clearly, so nobody has to infer it from what is missing elsewhere on the
+          page.
+        </p>
+      </SectionHead>
+
+      <ul class="outstanding plain" data-reveal-group>
+        {
+          [
+            'A signed power purchase agreement, or an agreed tariff.',
+            'A generation licence or any other energy-sector authorisation.',
+            'Environmental and social approval, or a completed impact assessment.',
+            'A grid-connection agreement, or confirmed network capacity.',
+            'Financial close, committed debt, or a committed equity investor.',
+            'Bankability certification, or independent lender technical due diligence.',
+            'Procured equipment, or a contracted EPC provider.',
+            'A site-specific, independently reviewed energy-yield assessment.',
+          ].map((item) => (
+            <li class="outstanding__item" data-reveal>
+              <StatusBadge status="outstanding" explain={false} />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="micro-note outstanding__note" data-reveal>
+        This is the normal position for a project at early development stage. Yala Energy publishes
+        it because a partner will establish it in the first hour of due diligence anyway, and
+        because it is the honest answer to the question every investor asks first.
+      </p>
+    </div>
+  </section>
+
+  <section class="stage stage--tight stage--sunken" aria-labelledby="mcta-title">
+    <div class="shell">
+      <div class="cta-band" data-reveal>
+        <div class="stack stack--sm">
+          <h2 class="title-md" id="mcta-title">Interested in Muchenje?</h2>
+          <p class="cta-band__note">
+            Equity, technical partnership, offtake or supply — tell us which, and we will send what
+            exists today.
+          </p>
+        </div>
+        <div class="cluster">
+          <a class="btn" href="/contact/#enquiry">
+            Start a conversation
+            <Arrow />
+          </a>
+          <a class="btn btn--ghost" href="/pv-bess-engineering/">
+            PV & BESS Engineering
+            <Arrow />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.6rem;
+    margin: 0;
+    color: var(--forest-300);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-inline-end: 0.6rem;
+    opacity: 0.6;
+  }
+
+  .breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--lime-300);
+    text-decoration: underline;
+  }
+
+  .breadcrumb [aria-current='page'] {
+    color: #fff;
+  }
+
+  .project-hero__caveat {
+    max-width: 68ch;
+    margin: 0;
+    padding: var(--space-md) var(--space-lg);
+    border-left: 3px solid var(--signal-amber);
+    background: color-mix(in oklab, var(--forest-950) 55%, transparent);
+    color: #e7d7bc;
+    font-size: var(--step--1);
+    line-height: 1.55;
+  }
+
+  /* --- Legend --- */
+  .legend {
+    display: grid;
+    gap: var(--space-md);
+    margin: 0;
+  }
+
+  @media (min-width: 44rem) {
+    .legend {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .legend__item {
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    align-content: start;
+    font-size: var(--step--2);
+    line-height: 1.5;
+  }
+
+  .scale-band {
+    row-gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .muchenje__metrics,
+  .muchenje__table,
+  .muchenje__diagram,
+  .muchenje__timeline {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .muchenje__diagram-note {
+    margin-block-start: var(--space-xl);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule-on-ink);
+  }
+
+  /* --- Resource --- */
+  .resource__figure {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    padding-block: var(--space-lg);
+    border-block: 1px solid var(--rule);
+  }
+
+  .resource__value {
+    margin: 0;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    font-weight: 600;
+    letter-spacing: var(--tracking-display);
+    line-height: 1;
+  }
+
+  .resource__metric {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--step--1);
+  }
+
+  /* --- Outstanding list --- */
+  .outstanding {
+    display: grid;
+    gap: 0;
+    margin-block-start: var(--space-2xl);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .outstanding__item {
+    display: grid;
+    gap: 0.5rem 1.25rem;
+    align-items: baseline;
+    padding-block: var(--space-md);
+    border-block-end: 1px solid var(--rule);
+    font-size: var(--step-0);
+    line-height: 1.55;
+  }
+
+  @media (min-width: 40rem) {
+    .outstanding__item {
+      grid-template-columns: 10rem minmax(0, 1fr);
+    }
+  }
+
+  .outstanding__note {
+    margin-block-start: var(--space-xl);
+  }
+</style>

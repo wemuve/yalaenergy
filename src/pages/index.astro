@@ -1,0 +1,546 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import MetricRow from '../components/MetricRow.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import PhotoFigure from '../components/PhotoFigure.astro';
+import Photo from '../components/Photo.astro';
+import Arrow from '../components/Arrow.astro';
+import { PROJECT_METRICS, MUCHENJE } from '../data/project';
+import { CAPABILITIES } from '../data/company';
+
+const description =
+  'Yala Energy Limited is a Zambian renewable-energy developer and PV & BESS engineering consultancy, developing the proposed 20 MWp Muchenje Solar PV Plant with battery storage in Chibombo District.';
+---
+
+<BaseLayout
+  title="Powering a Greener Future"
+  description={description}
+  path="/"
+  schema={[
+    {
+      '@type': 'WebPage',
+      '@id': 'https://yalaenergy.co.zm/#webpage',
+      url: 'https://yalaenergy.co.zm/',
+      name: 'Yala Energy — Powering a Greener Future',
+      description,
+      isPartOf: { '@id': 'https://yalaenergy.co.zm/#website' },
+      about: { '@id': 'https://yalaenergy.co.zm/#organization' },
+    },
+  ]}
+>
+  <Hero />
+
+  <!-- ===================== Project at a glance ===================== -->
+  <section class="stage stage--paper" id="project-glance" aria-labelledby="glance-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="Muchenje Solar PV Plant · Project concept"
+        title="The numbers behind the project — and what each one actually is."
+        titleClass="title-lg"
+        id="glance-title"
+        split
+      >
+        <p>
+          Every figure below is either a design assumption of the current project concept or a
+          sponsor estimate. Each one carries its status, so there is no ambiguity about what has
+          been studied and what has not.
+        </p>
+        <a class="link-arrow" href="/projects/muchenje-solar-pv-plant/#technical">
+          Full technical summary
+          <Arrow size={12} class="" />
+        </a>
+      </SectionHead>
+
+      <MetricRow metrics={PROJECT_METRICS} class="glance__metrics" />
+
+      <p class="glance__footnote" data-reveal>
+        <strong>MWp</strong> is peak DC generation capacity. <strong>MWh</strong> is stored energy
+        capacity — how much the battery holds, not how fast it can deliver it. The storage power
+        rating in MW and the plant's AC export capacity follow from the final inverter, storage and
+        interconnection design, which is not yet complete.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== About preview ===================== -->
+  <section class="stage stage--sunken" aria-labelledby="about-preview-title">
+    <div class="shell">
+      <div class="grid12 about-preview">
+        <div class="lead stack stack--lg" data-reveal>
+          <p class="eyebrow">About Yala Energy</p>
+          <h2 class="title-lg" id="about-preview-title">
+            A Zambian energy company built to develop projects properly.
+          </h2>
+        </div>
+
+        <div class="body stack stack--lg" data-reveal>
+          <div class="prose">
+            <p>
+              Yala Energy Limited is a wholly Zambian-owned company formed to develop, own and
+              operate renewable generation — and to strengthen the energy security that Zambian
+              households, industry and national development depend on.
+            </p>
+            <p>
+              Developing properly means resource data before capacity claims, grid studies before
+              connection promises, and a financial model that survives contact with a lender. We
+              would rather spend another season on land documentation and yield assessment than
+              carry an unexamined assumption into a financing discussion.
+            </p>
+          </div>
+          <a class="link-arrow" href="/about/">
+            About the company and its people
+            <Arrow size={12} class="" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Capabilities ===================== -->
+  <section class="stage stage--ink stage--grid-texture" aria-labelledby="capabilities-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="What we do"
+        title="Three parts to a generation project. One discipline behind all of them."
+        titleClass="title-lg"
+        id="capabilities-title"
+        split
+      >
+        <p>
+          A solar plant is only as good as the weakest link between sunlight and the network. We
+          work all three, and we offer the same engineering as a service in its own right.
+        </p>
+      </SectionHead>
+
+      <ol class="numbered" data-reveal-group>
+        {
+          CAPABILITIES.map((capability) => (
+            <li class="numbered__item" data-reveal>
+              <p class="numbered__index">{capability.index}</p>
+              <h3 class="numbered__title">{capability.title}</h3>
+              <div class="numbered__body">
+                <p>{capability.summary}</p>
+                <ul class="ticks">
+                  {capability.points.map((point) => (
+                    <li>{point}</li>
+                  ))}
+                </ul>
+                {capability.href && (
+                  <a class="link-arrow" href={capability.href}>
+                    {capability.linkLabel}
+                    <Arrow size={12} class="" />
+                  </a>
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== Flagship project ===================== -->
+  <section class="stage stage--paper flagship" aria-labelledby="flagship-title">
+    <div class="shell">
+      <div class="flagship__grid">
+        <div class="flagship__media" data-reveal>
+          <PhotoFigure
+            photo="aerial"
+            ratio="ratio--4x3"
+            sizes="(min-width: 60rem) 52vw, 100vw"
+            fallbackMood="day"
+          >
+            An operating plant of comparable scale, to show what 20 MWp of ground-mounted
+            generation looks like on the ground.
+          </PhotoFigure>
+        </div>
+
+        <div class="flagship__body stack stack--lg" data-reveal>
+          <p class="eyebrow">Flagship project</p>
+          <h2 class="title-lg" id="flagship-title">{MUCHENJE.name}</h2>
+
+          <dl class="flagship__facts">
+            <div>
+              <dt>Location</dt>
+              <dd>{MUCHENJE.location.area}, {MUCHENJE.location.district}, {MUCHENJE.location.country}</dd>
+            </div>
+            <div>
+              <dt>Proposed capacity</dt>
+              <dd>20 MWp solar PV</dd>
+            </div>
+            <div>
+              <dt>Proposed storage</dt>
+              <dd>40–60 MWh battery energy storage</dd>
+            </div>
+            <div>
+              <dt>Project stage</dt>
+              <dd class="flagship__stage">
+                {MUCHENJE.stage}
+                <StatusBadge status="confirmed" />
+              </dd>
+            </div>
+          </dl>
+
+          <p class="flagship__summary">{MUCHENJE.summary}</p>
+
+          <a class="btn" href="/projects/muchenje-solar-pv-plant/">
+            View the project detail
+            <Arrow />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Investment ===================== -->
+  <section class="stage stage--forest" aria-labelledby="investment-title">
+    <div class="shell">
+      <div class="grid12">
+        <div class="half-start stack stack--lg" data-reveal>
+          <p class="eyebrow">Investment & partnership</p>
+          <h2 class="title-lg" id="investment-title">
+            Capital, technical expertise and a long-term vision.
+          </h2>
+          <div class="prose">
+            <p>
+              Yala Energy is seeking equity and technical partners to take Muchenje through
+              feasibility, permitting and financial close. We are looking for partners who bring
+              utility-scale solar and storage experience alongside capital, and who expect to test
+              every assumption before committing to it.
+            </p>
+            <p>
+              Any partnership is subject to mutual due diligence and commercial negotiation. We
+              will give you the same picture of the project that we work from, including what is
+              not yet secured.
+            </p>
+          </div>
+          <a class="btn btn--accent" href="/contact/#enquiry">
+            Discuss an Investment or Development Partnership
+            <Arrow />
+          </a>
+        </div>
+
+        <aside class="half-end investment__aside" data-reveal aria-label="Partnership position">
+          <div class="note-panel">
+            <p class="note-panel__title">What is and is not in place</p>
+            <ul class="ticks ticks--dash">
+              <li>Company incorporated in Zambia and site identified — company-stated, documents under review.</li>
+              <li>No signed power purchase agreement and no agreed tariff.</li>
+              <li>No generation licence or environmental approval granted.</li>
+              <li>No grid-connection agreement with the network operator.</li>
+              <li>No financial close, and no investor commitment secured.</li>
+              <li>Estimated CAPEX of approximately USD 31 million is a sponsor estimate, not a costed budget.</li>
+            </ul>
+            <p class="investment__legal">
+              Nothing on this website is an offer to sell or a solicitation to buy securities, or
+              investment advice.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Engineering services ===================== -->
+  <section class="stage stage--raised" aria-labelledby="services-preview-title">
+    <div class="shell">
+      <SectionHead
+        eyebrow="PV & BESS Engineering"
+        title="From solar modelling to project decisions."
+        titleClass="title-lg"
+        id="services-preview-title"
+        split
+      >
+        <p>
+          The same engineering capability we use on our own projects is available to developers,
+          project owners, EPC contractors and investors — with a written scope and declared
+          assumptions on every deliverable.
+        </p>
+      </SectionHead>
+
+      <div class="columns services-preview" data-reveal-group>
+        <article class="service-card" data-reveal>
+          <p class="service-card__index">01</p>
+          <h3 class="title-xs">PV design and simulation</h3>
+          <p>
+            Layout, DC/AC configuration scenarios, module and inverter assessment, expected yield,
+            and loss and clipping analysis at feasibility level.
+          </p>
+        </article>
+        <article class="service-card" data-reveal>
+          <p class="service-card__index">02</p>
+          <h3 class="title-xs">Battery storage assessment</h3>
+          <p>
+            Energy and power sizing, duration, AC- versus DC-coupled architecture and PV-plus-storage
+            scenario modelling.
+          </p>
+        </article>
+        <article class="service-card" data-reveal>
+          <p class="service-card__index">03</p>
+          <h3 class="title-xs">Technical-commercial modelling</h3>
+          <p>
+            CAPEX and OPEX assumptions, revenue and tariff sensitivities, dispatch and replacement
+            assumptions, and project-life scenarios.
+          </p>
+        </article>
+        <article class="service-card" data-reveal>
+          <p class="service-card__index">04</p>
+          <h3 class="title-xs">Development support</h3>
+          <p>
+            Study coordination, configuration review, interconnection study management and
+            investor-facing technical summaries.
+          </p>
+        </article>
+      </div>
+
+      <div class="services-preview__cta" data-reveal>
+        <a class="btn" href="/pv-bess-engineering/">
+          Explore PV & BESS Engineering
+          <Arrow />
+        </a>
+        <p class="services-preview__note">
+          Preliminary and feasibility-level work. Detailed design, protection studies and grid-code
+          compliance require a licensed design authority.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Closing CTA ===================== -->
+  <section class="stage stage--ink closing" aria-labelledby="closing-title">
+    <div class="closing__media" aria-hidden="true">
+      <Photo photo="array" fill sizes="100vw" fallbackMood="dusk" idPrefix="closing" />
+    </div>
+    <div class="shell closing__inner">
+      <p class="eyebrow" data-reveal>Start a conversation</p>
+      <h2 class="title-xl closing__title" id="closing-title" data-reveal>
+        Projects get built by people who ask hard questions early.
+      </h2>
+      <p class="closing__lede" data-reveal>
+        Whether you are an investor assessing Zambian generation, a utility planning
+        interconnection, an EPC contractor pricing a build, or a developer who needs the yield
+        modelled honestly — we would rather have the detailed conversation than the polished one.
+      </p>
+      <div class="closing__actions" data-reveal>
+        <a class="btn btn--accent" href="/contact/">
+          Discuss a Project
+          <Arrow />
+        </a>
+        <a class="btn btn--ghost" href="/pv-bess-engineering/#enquiry">
+          Request a PV & BESS Assessment
+          <Arrow />
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .glance__metrics {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .glance__footnote {
+    max-width: 88ch;
+    margin-block-start: var(--space-xl);
+    color: var(--text-muted);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .glance__footnote strong {
+    color: var(--text-strong);
+    font-family: var(--font-display);
+  }
+
+  .about-preview {
+    row-gap: var(--space-xl);
+  }
+
+  /* --- Flagship --- */
+  .flagship__grid {
+    display: grid;
+    gap: var(--space-2xl) var(--gutter);
+  }
+
+  @media (min-width: 60rem) {
+    .flagship__grid {
+      grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+      align-items: center;
+    }
+  }
+
+  .flagship__media {
+    margin: 0;
+  }
+
+  .flagship__caption {
+    margin-block-start: var(--space-sm);
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.5;
+  }
+
+  .flagship__facts {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .flagship__facts > div {
+    display: grid;
+    gap: 0.2rem 1rem;
+    padding-block: var(--space-md);
+    border-block-end: 1px solid var(--rule);
+  }
+
+  @media (min-width: 30rem) {
+    .flagship__facts > div {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+
+  .flagship__facts dt {
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .flagship__facts dd {
+    margin: 0;
+    color: var(--text-strong);
+    font-size: var(--step-0);
+    font-weight: 500;
+  }
+
+  .flagship__stage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+  }
+
+  .flagship__summary {
+    max-width: 56ch;
+    margin: 0;
+    color: var(--text-body);
+    line-height: 1.62;
+  }
+
+  /* --- Investment --- */
+  .investment__aside {
+    align-self: start;
+  }
+
+  .investment__legal {
+    margin: 0;
+    padding-block-start: var(--space-sm);
+    border-block-start: 1px solid var(--rule-on-ink);
+    color: var(--forest-300);
+    font-size: var(--step--2);
+    line-height: 1.5;
+  }
+
+  /* --- Services preview --- */
+  .services-preview {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .service-card {
+    display: grid;
+    gap: var(--space-sm);
+    align-content: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 2px solid var(--forest-900);
+  }
+
+  .service-card__index {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+  }
+
+  .service-card p:last-child {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .services-preview__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-xl);
+    align-items: center;
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-xl);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .services-preview__note {
+    max-width: 54ch;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  /* --- Closing --- */
+  .closing {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .closing__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.4;
+  }
+
+  .closing__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--forest-950) 80%, transparent),
+      color-mix(in oklab, var(--forest-950) 92%, transparent)
+    );
+  }
+
+  .closing__inner {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+  }
+
+  .closing__title {
+    max-width: 24ch;
+  }
+
+  .closing__lede {
+    max-width: 62ch;
+    margin: 0;
+    color: #cbd9cd;
+    font-size: var(--step-1);
+    line-height: 1.52;
+    text-wrap: pretty;
+  }
+
+  .closing__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-block-start: var(--space-sm);
+  }
+</style>

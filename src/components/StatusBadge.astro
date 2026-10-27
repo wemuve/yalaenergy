@@ -1,0 +1,21 @@
+---
+import { STATUS_META, type ClaimStatus } from '../data/types';
+
+interface Props {
+  status: ClaimStatus;
+  /** Render the status description as a tooltip and accessible label. */
+  explain?: boolean;
+  class?: string;
+}
+
+const { status, explain = true, class: className = '' } = Astro.props;
+const meta = STATUS_META[status];
+---
+
+<span
+  class:list={['status', `status--${status}`, className]}
+  title={explain ? meta.description : undefined}
+>
+  {meta.label}
+  {explain && <span class="visually-hidden">. {meta.description}</span>}
+</span>

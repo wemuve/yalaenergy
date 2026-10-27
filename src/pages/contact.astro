@@ -1,0 +1,258 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Photo from '../components/Photo.astro';
+import Arrow from '../components/Arrow.astro';
+import { CONTACT, ENQUIRY_ROUTES, BRAND } from '../data/site';
+
+const description =
+  'Contact Yala Energy Limited about project development and investment, PV & BESS engineering and consulting, or general partnership enquiries.';
+---
+
+<BaseLayout
+  title="Contact"
+  description={description}
+  path="/contact/"
+  schema={[
+    {
+      '@type': 'ContactPage',
+      '@id': 'https://yalaenergy.co.zm/contact/#webpage',
+      url: 'https://yalaenergy.co.zm/contact/',
+      name: 'Contact — Yala Energy',
+      description,
+      isPartOf: { '@id': 'https://yalaenergy.co.zm/#website' },
+      about: { '@id': 'https://yalaenergy.co.zm/#organization' },
+    },
+  ]}
+>
+  <section class="page-hero" aria-labelledby="contact-title">
+    <div class="page-hero__media" aria-hidden="true">
+      <Photo photo="module" fill sizes="100vw" fallbackMood="dusk" idPrefix="contacthero" />
+    </div>
+    <div class="shell page-hero__inner">
+      <p class="eyebrow">Contact</p>
+      <h1 class="title-xl page-hero__title" id="contact-title">
+        Three routes in. Pick the one that fits.
+      </h1>
+      <p class="page-hero__lede">
+        Tell us which conversation you want to have and we will route it to the right person. We
+        aim to respond to qualified enquiries within five working days.
+      </p>
+      <p class="page-hero__slogan">{BRAND.slogan}</p>
+    </div>
+  </section>
+
+  <!-- ===================== Routes ===================== -->
+  <section class="stage stage--paper" aria-labelledby="routes-title">
+    <div class="shell">
+      <SectionHead eyebrow="Enquiry routes" title="Where your message should go." titleClass="title-md" id="routes-title" split>
+        <p>
+          Each route goes to a different conversation. Choosing the right one is the fastest way to
+          a useful reply.
+        </p>
+      </SectionHead>
+
+      <div class="columns routes" data-reveal-group>
+        {
+          ENQUIRY_ROUTES.map((route) => (
+            <article class="route" data-reveal>
+              <p class="route__eyebrow">{route.eyebrow}</p>
+              <h3 class="title-xs">{route.title}</h3>
+              <p class="route__summary">{route.summary}</p>
+              <ul class="ticks">
+                {route.bullets.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+              <a class="link-arrow" href={route.formTarget}>
+                {route.cta}
+                <Arrow size={12} class="" />
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Form + details ===================== -->
+  <section class="stage stage--sunken" id="enquiry" aria-labelledby="contact-form-title">
+    <div class="shell">
+      <div class="contact">
+        <div class="contact__form" data-reveal>
+          <div class="stack stack--md contact__form-head">
+            <p class="eyebrow">Send a message</p>
+            <h2 class="title-md" id="contact-form-title">General and project enquiries</h2>
+            <p class="micro-note">
+              For a PV &amp; BESS engineering assessment, the{' '}
+              <a href="/pv-bess-engineering/#enquiry">dedicated assessment form</a>{' '}captures the
+              project detail we need and will get you a faster, more specific answer.
+            </p>
+          </div>
+
+          <EnquiryForm formId="contact" submitLabel="Send enquiry" id="contact-enquiry" />
+        </div>
+
+        <aside class="contact__details stack stack--xl" data-reveal aria-label="Contact details">
+          <div class="contact__block">
+            <h2 class="contact__block-title">Email</h2>
+            <a class="contact__email" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+            <p class="micro-note">
+              The fastest route for anything confidential or document-heavy. Please do not send
+              commercially sensitive material through the web form.
+            </p>
+          </div>
+
+          {
+            CONTACT.offices.map((office) => (
+              <div class="contact__block">
+                <h2 class="contact__block-title">{office.label}</h2>
+                <address class="contact__address">
+                  {office.lines.map((line) => (
+                    <span>{line}</span>
+                  ))}
+                </address>
+                {!office.verified && (
+                  <p class="micro-note">
+                    Carried over from existing company materials and pending verification. Please
+                    confirm by email before sending anything by post or visiting.
+                  </p>
+                )}
+              </div>
+            ))
+          }
+
+          <div class="contact__block">
+            <h2 class="contact__block-title">Telephone</h2>
+            {
+              CONTACT.telephone ? (
+                <a class="contact__email" href={`tel:${CONTACT.telephone.replace(/\s+/g, '')}`}>
+                  {CONTACT.telephone}
+                </a>
+              ) : (
+                <p class="micro-note">
+                  No telephone number is published here. The numbers in the existing company
+                  materials have not been verified for this site, and publishing an unverified
+                  number is worse than publishing none. Email is the reliable route.
+                </p>
+              )
+            }
+          </div>
+
+          <div class="note-panel">
+            <p class="note-panel__title">Before you send</p>
+            <ul class="ticks ticks--dash">
+              <li>We cannot give investment advice, and nothing we send is an offer of securities.</li>
+              <li>Project documentation is shared under confidentiality, to identified parties.</li>
+              <li>Your details are used only to answer your enquiry — see the <a href="/privacy/">privacy policy</a>.</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .routes {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .route {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+    align-content: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 2px solid var(--forest-900);
+  }
+
+  .route__eyebrow {
+    margin: 0;
+    color: var(--accent-on-light);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.08em;
+  }
+
+  .route__summary {
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .contact {
+    display: grid;
+    gap: var(--space-2xl) var(--gutter);
+  }
+
+  @media (min-width: 64rem) {
+    .contact {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.8fr);
+      align-items: start;
+    }
+  }
+
+  .contact__form {
+    display: grid;
+    gap: var(--space-xl);
+    padding: var(--space-xl);
+    border: 1px solid var(--rule);
+    background: var(--surface-raised);
+  }
+
+  @media (max-width: 36rem) {
+    .contact__form {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+
+  .contact__form-head a {
+    color: var(--forest-700);
+    text-decoration: underline;
+    text-decoration-color: var(--lime-500);
+    text-decoration-thickness: 2px;
+  }
+
+  .contact__block {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule-strong);
+  }
+
+  .contact__block-title {
+    margin: 0;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: var(--tracking-eyebrow);
+    text-transform: uppercase;
+  }
+
+  .contact__email {
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: underline;
+    text-decoration-color: var(--lime-500);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__address {
+    display: grid;
+    gap: 0.1rem;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    font-style: normal;
+    line-height: 1.5;
+  }
+</style>

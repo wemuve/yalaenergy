@@ -1,0 +1,383 @@
+---
+/**
+ * Interactive single-line concept diagram of a PV-plus-storage plant.
+ *
+ * The SVG is decorative (`aria-hidden`); the tab list beside it is the real
+ * control and carries the same information as text. Every panel is in the DOM,
+ * so with JavaScript disabled the component degrades to a readable, fully
+ * labelled list of the system's elements.
+ */
+interface Node {
+  readonly key: string;
+  readonly label: string;
+  readonly title: string;
+  readonly body: string;
+  readonly points: readonly string[];
+}
+
+const NODES: readonly Node[] = [
+  {
+    key: 'array',
+    label: 'PV array',
+    title: 'Solar PV array',
+    body: 'Module strings on fixed-tilt or tracking structures, grouped into blocks sized around the inverter configuration. The array is rated in MWp — peak DC capacity under standard test conditions — which is not the same figure as what the plant can export.',
+    points: [
+      'Rated in MWp (DC); export capacity is set downstream',
+      'Layout drives land use, shading losses and cable runs',
+      'Muchenje concept: 20 MWp proposed (design assumption)',
+    ],
+  },
+  {
+    key: 'inverter',
+    label: 'Inverters',
+    title: 'Inverters and DC/AC ratio',
+    body: 'Inverters convert DC to AC and set the plant’s AC capacity. The ratio between DC and AC capacity is a commercial decision: a higher ratio harvests more energy in weak light but clips the peaks on the best days.',
+    points: [
+      'Sets AC export capacity in MW',
+      'DC/AC ratio is modelled as a scenario, not assumed',
+      'Clipping losses quantified in the yield simulation',
+    ],
+  },
+  {
+    key: 'bess',
+    label: 'Battery storage',
+    title: 'Battery energy storage system',
+    body: 'Storage is specified by two independent numbers: power in MW, which is how fast it can charge or discharge, and energy in MWh, which is how long it can sustain that. Coupling it on the AC or the DC side changes cost, efficiency and controllability.',
+    points: [
+      'Power (MW) and energy (MWh) are sized separately',
+      'AC- or DC-coupled architecture assessed per project',
+      'Muchenje concept: 40–60 MWh proposed (design assumption)',
+    ],
+  },
+  {
+    key: 'mv',
+    label: 'MV station',
+    title: 'Medium-voltage collection and step-up',
+    body: 'Block transformers raise inverter output to the collection voltage, and the plant’s main station steps it up again to the voltage of the evacuation line. Protection, metering and the point of common coupling live here.',
+    points: [
+      'Collection network, block transformers and switchgear',
+      'Protection coordination and revenue metering',
+      'Grid-code compliance is proven at this boundary',
+    ],
+  },
+  {
+    key: 'line',
+    label: 'Evacuation line',
+    title: '33 kV evacuation line',
+    body: 'An overhead line carries the output from the plant to the network connection point. Its route, length and voltage determine losses, cost and the wayleave and survey work that has to be completed before construction.',
+    points: [
+      'Route length drives losses and capital cost',
+      'Wayleaves, survey and line design required',
+      'Muchenje concept: approximately 8.2 km at 33 kV',
+    ],
+  },
+  {
+    key: 'grid',
+    label: 'Grid connection',
+    title: 'Network connection point',
+    body: 'The connection point is where the project becomes part of the national network. It depends entirely on the network operator: available capacity, system-impact study outcomes and a connection agreement. None of that is in the developer’s gift.',
+    points: [
+      'Subject to the network operator’s studies and agreement',
+      'Muchenje intends a connection to ZESCO infrastructure',
+      'No connection agreement is in place — status: outstanding',
+    ],
+  },
+];
+---
+
+<div class="diagram" data-diagram>
+  <div class="diagram__graphic">
+    <svg
+      viewBox="0 0 760 300"
+      role="img"
+      aria-label="Single-line concept diagram: a solar array and a battery storage system feed inverters and a medium-voltage station, which connects through a 33 kV evacuation line to the network connection point."
+      data-diagram-graphic
+    >
+      <defs>
+        <marker id="diag-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0 1l6 3-6 3z" fill="currentColor" />
+        </marker>
+      </defs>
+
+      <!-- Conductors -->
+      <g class="diagram__wires" fill="none" stroke-width="1.6" marker-end="url(#diag-arrow)">
+        <path d="M148 108h56" />
+        <path d="M148 212h40q16 0 16-16v-72" />
+        <path d="M300 108h56" />
+        <path d="M452 108h52" />
+        <path d="M600 108h48" />
+      </g>
+
+      <!-- PV array -->
+      <g data-node="array" class="diagram__node">
+        <rect x="24" y="62" width="124" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <path d="M48 128h76l-10-42H58z" />
+          <path d="M86 86v42M62 100h48M56 114h60" class="diagram__hair" />
+          <path d="M86 128v14M72 142h28" class="diagram__hair" />
+        </g>
+        <text x="86" y="170">PV array</text>
+      </g>
+
+      <!-- BESS -->
+      <g data-node="bess" class="diagram__node">
+        <rect x="24" y="166" width="124" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <rect x="56" y="192" width="60" height="34" rx="2" />
+          <path d="M70 226v8M102 226v8" class="diagram__hair" />
+          <path d="M80 200l10 8-6 1 6 9-12-10 6-1z" class="diagram__fill" />
+        </g>
+        <text x="86" y="250">Battery storage</text>
+      </g>
+
+      <!-- Inverters -->
+      <g data-node="inverter" class="diagram__node">
+        <rect x="204" y="62" width="96" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <path d="M228 110q10-18 20 0t20 0" class="diagram__hair" />
+          <path d="M228 92h40" class="diagram__hair" />
+        </g>
+        <text x="252" y="140">Inverters</text>
+      </g>
+
+      <!-- MV station -->
+      <g data-node="mv" class="diagram__node">
+        <rect x="356" y="62" width="96" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <circle cx="396" cy="104" r="14" />
+          <circle cx="412" cy="104" r="14" />
+        </g>
+        <text x="404" y="140">MV station</text>
+      </g>
+
+      <!-- Evacuation line -->
+      <g data-node="line" class="diagram__node">
+        <rect x="504" y="62" width="96" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <path d="M540 122V86M528 92h24M531 100h18" class="diagram__hair" />
+          <path d="M570 122V94M562 100h16" class="diagram__hair" />
+          <path d="M540 90q16 6 30 8" class="diagram__hair" />
+        </g>
+        <text x="552" y="140">33 kV line</text>
+      </g>
+
+      <!-- Grid -->
+      <g data-node="grid" class="diagram__node">
+        <rect x="648" y="62" width="88" height="92" rx="3" />
+        <g class="diagram__glyph">
+          <path d="M676 120V88M708 120V88M668 96h48M668 106h48" class="diagram__hair" />
+        </g>
+        <text x="692" y="140">Grid</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="diagram__controls">
+    <div class="diagram__tabs" role="tablist" aria-label="System elements">
+      {
+        NODES.map((node, i) => (
+          <button
+            class="diagram__tab"
+            type="button"
+            role="tab"
+            id={`diag-tab-${node.key}`}
+            aria-controls={`diag-panel-${node.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            data-node={node.key}
+          >
+            {node.label}
+          </button>
+        ))
+      }
+    </div>
+
+    {
+      NODES.map((node, i) => (
+        <div
+          class="diagram__panel"
+          role="tabpanel"
+          id={`diag-panel-${node.key}`}
+          aria-labelledby={`diag-tab-${node.key}`}
+          tabindex="0"
+          hidden={i !== 0}
+        >
+          <h3 class="title-xs">{node.title}</h3>
+          <p>{node.body}</p>
+          <ul class="ticks">
+            {node.points.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .diagram {
+    display: grid;
+    gap: var(--space-xl) var(--gutter);
+  }
+
+  @media (min-width: 64rem) {
+    .diagram {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+
+  .diagram__graphic {
+    padding: var(--space-lg);
+    border: 1px solid var(--rule-on-ink);
+    background: color-mix(in oklab, #ffffff 4%, transparent);
+  }
+
+  .diagram__graphic svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .diagram__wires {
+    color: var(--forest-300);
+    stroke: var(--forest-300);
+  }
+
+  .diagram__node rect,
+  .diagram__node circle,
+  .diagram__node path {
+    transition:
+      stroke var(--dur-mid) var(--ease-out),
+      fill var(--dur-mid) var(--ease-out),
+      opacity var(--dur-mid) var(--ease-out);
+  }
+
+  .diagram__node > rect {
+    fill: none;
+    stroke: var(--rule-on-ink-strong);
+    stroke-width: 1.2;
+  }
+
+  .diagram__glyph {
+    fill: color-mix(in oklab, var(--forest-300) 22%, transparent);
+    stroke: var(--forest-300);
+    stroke-width: 1.4;
+  }
+
+  .diagram__glyph .diagram__hair {
+    fill: none;
+  }
+
+  .diagram__glyph .diagram__fill {
+    fill: var(--lime-400);
+    stroke: none;
+  }
+
+  .diagram__node text {
+    fill: var(--text-on-ink-muted);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-anchor: middle;
+    text-transform: uppercase;
+  }
+
+  .diagram__node.is-dimmed {
+    opacity: 0.4;
+  }
+
+  .diagram__node.is-active > rect {
+    stroke: var(--lime-400);
+    stroke-width: 1.8;
+    fill: color-mix(in oklab, var(--lime-500) 9%, transparent);
+  }
+
+  .diagram__node.is-active .diagram__glyph {
+    stroke: var(--lime-300);
+    fill: color-mix(in oklab, var(--lime-400) 26%, transparent);
+  }
+
+  .diagram__node.is-active text {
+    fill: #fff;
+  }
+
+  .diagram__controls {
+    display: grid;
+    gap: var(--space-lg);
+    align-content: start;
+  }
+
+  .diagram__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .diagram__tab {
+    padding: 0.45rem 0.85rem;
+    border: 1px solid var(--rule-on-ink-strong);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--text-on-ink-muted);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .diagram__tab:hover {
+    border-color: var(--lime-400);
+    color: #fff;
+  }
+
+  .diagram__tab[aria-selected='true'] {
+    border-color: var(--lime-400);
+    background: var(--lime-500);
+    color: var(--forest-950);
+  }
+
+  .diagram__panel {
+    display: grid;
+    gap: var(--space-md);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule-on-ink);
+    color: var(--text-on-ink-muted);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .diagram__panel h3 {
+    color: var(--text-on-ink);
+  }
+
+  .diagram__panel p {
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  /* Without JavaScript the tab list is inert, so show every panel as a plain
+     readable list instead of hiding five sixths of the content. The `js` class
+     is set by a blocking inline script in the layout, so there is no flash of
+     all six panels before the tabs take over. */
+  .diagram__tabs {
+    display: none;
+  }
+
+  :root.js .diagram__tabs {
+    display: flex;
+  }
+
+  .diagram__panel[hidden] {
+    display: grid;
+  }
+
+  :root.js .diagram__panel[hidden] {
+    display: none;
+  }
+</style>

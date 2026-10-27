@@ -1,0 +1,179 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import type { TimelineStage } from '../data/types';
+
+interface Props {
+  stages: readonly TimelineStage[];
+}
+
+const { stages } = Astro.props;
+---
+
+<ol class="timeline" data-reveal-group>
+  {
+    stages.map((stage) => (
+      <li class="timeline__stage" data-reveal>
+        <div class="timeline__marker" aria-hidden="true">
+          <span class="timeline__index">{stage.index}</span>
+          <span class="timeline__track"></span>
+        </div>
+
+        <div class="timeline__head">
+          <h3 class="timeline__title title-sm">{stage.title}</h3>
+          <StatusBadge status={stage.status} />
+          <p class="timeline__summary">{stage.summary}</p>
+        </div>
+
+        <div class="timeline__detail">
+          <ul class="ticks ticks--dash">
+            {stage.items.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+          <p class="timeline__status-line">{stage.statusLine}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline__stage {
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr);
+    gap: 0 var(--space-lg);
+    padding-block-end: var(--space-2xl);
+  }
+
+  @media (min-width: 60rem) {
+    .timeline__stage {
+      grid-template-columns: 3.4rem minmax(0, 1fr) minmax(0, 1.05fr);
+      gap: 0 var(--gutter);
+    }
+  }
+
+  .timeline__marker {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    justify-items: center;
+    gap: 0.6rem;
+  }
+
+  @media (min-width: 60rem) {
+    .timeline__marker {
+      grid-row: span 2;
+    }
+  }
+
+  .timeline__index {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text-strong);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+    letter-spacing: 0.04em;
+  }
+
+  .stage--ink .timeline__index,
+  .stage--forest .timeline__index {
+    border-color: var(--rule-on-ink-strong);
+    background: transparent;
+    color: var(--lime-400);
+  }
+
+  .timeline__track {
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--rule-strong), transparent);
+  }
+
+  .stage--ink .timeline__track,
+  .stage--forest .timeline__track {
+    background: linear-gradient(to bottom, var(--rule-on-ink-strong), transparent);
+  }
+
+  .timeline__stage:last-child .timeline__track {
+    opacity: 0.3;
+  }
+
+  .timeline__head {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+    align-content: start;
+    padding-block-start: 0.15rem;
+  }
+
+  .timeline__title {
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .timeline__summary {
+    max-width: 46ch;
+    margin: 0;
+    color: var(--text-body);
+    font-size: var(--step--1);
+    line-height: 1.6;
+  }
+
+  .stage--ink .timeline__summary,
+  .stage--forest .timeline__summary {
+    color: var(--text-on-ink-muted);
+  }
+
+  .timeline__detail {
+    display: grid;
+    gap: var(--space-md);
+    align-content: start;
+    margin-block-start: var(--space-lg);
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule);
+    grid-column: 2;
+  }
+
+  .stage--ink .timeline__detail,
+  .stage--forest .timeline__detail {
+    border-block-start-color: var(--rule-on-ink);
+  }
+
+  @media (min-width: 60rem) {
+    .timeline__detail {
+      grid-column: 3;
+      margin-block-start: 0;
+      padding-block-start: 0.35rem;
+      border-block-start: 0;
+      border-inline-start: 1px solid var(--rule);
+      padding-inline-start: var(--gutter);
+    }
+
+    .stage--ink .timeline__detail,
+    .stage--forest .timeline__detail {
+      border-inline-start-color: var(--rule-on-ink);
+    }
+  }
+
+  .timeline__status-line {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--step--2);
+    font-style: italic;
+    line-height: 1.55;
+  }
+
+  .stage--ink .timeline__status-line,
+  .stage--forest .timeline__status-line {
+    color: var(--forest-300);
+  }
+</style>

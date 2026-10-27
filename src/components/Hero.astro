@@ -1,0 +1,298 @@
+---
+import Photo from './Photo.astro';
+import Arrow from './Arrow.astro';
+import { BRAND } from '../data/site';
+import { PHOTOS } from '../data/media';
+---
+
+<section class="hero on-ink" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <!-- The hero photograph is the LCP element: loaded eagerly at high
+         priority, with intrinsic dimensions so it reserves its own space. -->
+    <Photo
+      photo="dusk"
+      fill
+      priority
+      sizes="100vw"
+      widths={[960, 1440, 1920, 2560]}
+      fallbackMood="dusk"
+      idPrefix="hero"
+      class="hero__scene"
+    />
+    <!-- Animated light layer. Starts transparent and is only faded in once the
+         renderer has drawn a frame, so a blocked or failed script leaves the
+         photograph untouched. -->
+    <canvas class="hero__canvas" data-solar-field aria-hidden="true"></canvas>
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__content shell shell--wide">
+    <p class="hero__eyebrow">Independent Power Producer · Chibombo, Zambia</p>
+
+    <h1 class="hero__title" id="hero-title">
+      <span class="hero__slogan">{BRAND.slogan}</span>
+      <span class="hero__headline">{BRAND.supportingHeadline}</span>
+    </h1>
+
+    <p class="hero__lede">
+      Yala Energy Limited is developing the Muchenje Solar PV Plant, a proposed 20 MWp solar
+      generation project with battery storage in Chibombo District, Zambia. The project concept
+      includes an approximately 8.2 km, 33 kV evacuation line to the intended ZESCO interconnection
+      infrastructure. We also deliver PV and BESS engineering, design and simulation as a service.
+    </p>
+
+    <div class="hero__actions">
+      <a class="btn btn--accent" href="/projects/muchenje-solar-pv-plant/">
+        Explore the Muchenje Project
+        <Arrow />
+      </a>
+      <a class="btn btn--ghost" href="/contact/">
+        Partner With Yala
+        <Arrow />
+      </a>
+    </div>
+
+    <p class="hero__caveat">
+      Muchenje is at an early development stage. No power purchase agreement, licence, environmental
+      approval or financing is in place.
+      <span class="hero__credit">{PHOTOS.dusk.caption}</span>
+    </p>
+  </div>
+
+  <a class="hero__scroll" href="#project-glance">
+    <span class="hero__scroll-label">Project at a glance</span>
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    align-content: center;
+    min-height: min(88svh, 52rem);
+    padding-block: calc(var(--header-height) + var(--space-2xl)) var(--space-4xl);
+    overflow: hidden;
+    background: var(--forest-950);
+    color: var(--text-on-ink-muted);
+    isolation: isolate;
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .hero__canvas,
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__canvas {
+    opacity: 0;
+    mix-blend-mode: screen;
+    transition: opacity 1.4s var(--ease-out);
+  }
+
+  .hero__canvas[data-ready='true'] {
+    opacity: 1;
+  }
+
+  /* Legibility scrim: a horizontal gradient on wide viewports so the artwork
+     stays visible on the right, and a vertical one on narrow viewports where
+     the text spans the full width. */
+  .hero__scrim {
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--forest-950) 86%, transparent) 0%,
+        color-mix(in oklab, var(--forest-950) 62%, transparent) 46%,
+        color-mix(in oklab, var(--forest-950) 88%, transparent) 100%
+      );
+  }
+
+  @media (min-width: 56rem) {
+    .hero__scrim {
+      background:
+        linear-gradient(
+          100deg,
+          color-mix(in oklab, var(--forest-950) 92%, transparent) 0%,
+          color-mix(in oklab, var(--forest-950) 74%, transparent) 42%,
+          color-mix(in oklab, var(--forest-950) 24%, transparent) 78%,
+          color-mix(in oklab, var(--forest-950) 44%, transparent) 100%
+        ),
+        linear-gradient(
+          to bottom,
+          color-mix(in oklab, var(--forest-950) 42%, transparent) 0%,
+          transparent 34%,
+          color-mix(in oklab, var(--forest-950) 58%, transparent) 100%
+        );
+    }
+  }
+
+  .hero__content {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+    max-width: min(var(--measure-width), 100%);
+  }
+
+  .hero__eyebrow {
+    margin: 0;
+    color: var(--lime-400);
+    font-size: var(--step--2);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .hero__title {
+    display: grid;
+    gap: 0.4em;
+    margin: 0;
+  }
+
+  .hero__slogan {
+    color: #fff;
+    font-size: var(--step-5);
+    font-weight: 700;
+    letter-spacing: -0.036em;
+    line-height: 0.96;
+    text-wrap: balance;
+  }
+
+  .hero__headline {
+    display: block;
+    max-width: 24ch;
+    color: var(--lime-300);
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1.18;
+  }
+
+  .hero__lede {
+    max-width: 58ch;
+    margin: 0;
+    color: #cfdbd0;
+    font-size: var(--step-0);
+    line-height: 1.62;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 56rem) {
+    .hero__content {
+      gap: var(--space-xl);
+    }
+
+    .hero__lede {
+      font-size: var(--step-1);
+      line-height: 1.52;
+    }
+
+    /* One measured text column on the left, so the artwork stays visible on
+       the right and the slogan breaks on two lines rather than four. */
+    .hero__title,
+    .hero__lede,
+    .hero__caveat {
+      max-width: 44rem;
+    }
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .hero__caveat {
+    max-width: 62ch;
+    margin: 0;
+    padding-block-start: var(--space-md);
+    border-block-start: 1px solid var(--rule-on-ink);
+    color: var(--forest-300);
+    font-size: var(--step--2);
+    line-height: 1.55;
+  }
+
+  .hero__credit {
+    display: block;
+    margin-block-start: 0.35rem;
+    opacity: 0.78;
+  }
+
+  /* --- Scroll indicator --- */
+  .hero__scroll {
+    position: absolute;
+    z-index: 1;
+    right: var(--gutter);
+    bottom: var(--space-xl);
+    display: none;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--text-on-ink-muted);
+    font-size: var(--step--2);
+    letter-spacing: 0.16em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .hero__scroll:hover {
+    color: #fff;
+  }
+
+  .hero__scroll-line {
+    position: relative;
+    display: block;
+    width: 1px;
+    height: 3.4rem;
+    overflow: hidden;
+    background: var(--rule-on-ink-strong);
+  }
+
+  .hero__scroll-line::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 42%;
+    background: var(--lime-400);
+    animation: hero-scroll 2.6s var(--ease-in-out) infinite;
+  }
+
+  @keyframes hero-scroll {
+    0% {
+      transform: translateY(-110%);
+    }
+    55%,
+    100% {
+      transform: translateY(240%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll-line::after {
+      animation: none;
+      height: 100%;
+      opacity: 0.6;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero__scroll {
+      display: flex;
+      writing-mode: vertical-rl;
+    }
+
+    .hero__scroll-line {
+      width: 1px;
+      height: 3.4rem;
+    }
+  }
+</style>

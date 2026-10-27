@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Arrow from '../components/Arrow.astro';
+import { PRIMARY_NAV } from '../data/site';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for does not exist on yalaenergy.co.zm."
+  path="/404/"
+  noindex
+>
+  <section class="notfound stage--forest" aria-labelledby="notfound-title">
+    <div class="shell shell--narrow notfound__inner">
+      <p class="eyebrow">Error 404</p>
+      <h1 class="title-xl notfound__title" id="notfound-title">
+        That page is not here.
+      </h1>
+      <p class="notfound__lede">
+        The address may have changed, or the link that brought you here may be out of date.
+        Everything on the site is one click away below.
+      </p>
+
+      <nav class="notfound__nav" aria-label="Site sections">
+        <ul class="plain">
+          {
+            PRIMARY_NAV.filter((item) => item.href !== '/').map((item, index) => (
+              <li>
+                <a href={item.href}>
+                  <span class="notfound__index">{String(index + 1).padStart(2, '0')}</span>
+                  <span>
+                    <span class="notfound__label">{item.label}</span>
+                    {item.description && <span class="notfound__desc">{item.description}</span>}
+                  </span>
+                  <Arrow size={16} class="notfound__arrow" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <a class="btn btn--accent" href="/">
+        Back to the homepage
+        <Arrow />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    display: grid;
+    align-content: center;
+    min-height: 78svh;
+    padding-block: calc(var(--header-height) + var(--space-2xl)) var(--section-y);
+    background: var(--forest-950);
+    color: var(--text-on-ink-muted);
+  }
+
+  .notfound__inner {
+    display: grid;
+    gap: var(--space-lg);
+    justify-items: start;
+  }
+
+  .notfound__title {
+    color: #fff;
+  }
+
+  .notfound__lede {
+    max-width: 56ch;
+    margin: 0;
+    color: #cbd9cd;
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+
+  .notfound__nav {
+    width: 100%;
+    margin-block: var(--space-md);
+  }
+
+  .notfound__nav ul {
+    display: grid;
+    margin: 0;
+    border-block-start: 1px solid var(--rule-on-ink);
+  }
+
+  .notfound__nav a {
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: center;
+    padding-block: var(--space-md);
+    border-block-end: 1px solid var(--rule-on-ink);
+    color: var(--text-on-ink);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .notfound__nav a:hover {
+    color: var(--lime-300);
+  }
+
+  .notfound__index {
+    color: var(--lime-400);
+    font-family: var(--font-mono);
+    font-size: var(--step--2);
+  }
+
+  .notfound__label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 600;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .notfound__desc {
+    display: block;
+    color: var(--text-on-ink-muted);
+    font-size: var(--step--2);
+    line-height: 1.4;
+  }
+
+  .notfound__arrow {
+    transition: transform var(--dur-mid) var(--ease-out);
+  }
+
+  .notfound__nav a:hover .notfound__arrow {
+    transform: translateX(4px);
+  }
+</style>

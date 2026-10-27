@@ -1,0 +1,139 @@
+/* ===========================================================================
+   Yala Energy — design tokens
+   One source of truth for colour, type, space, motion and elevation.
+   ======================================================================== */
+
+:root {
+  /* --- Brand palette -------------------------------------------------- */
+  --forest-950: #061a11;
+  --forest-900: #0a2318;
+  --forest-850: #0c2a1e;
+  --forest-800: #103223;
+  --forest-700: #15432f;
+  --forest-600: #1b573d;
+  --forest-500: #22704e;
+  --forest-300: #6fa98c;
+  --forest-100: #d8e8df;
+
+  --lime-600: #6f9e26;
+  --lime-500: #8cc63f;
+  --lime-400: #a5d94b;
+  --lime-300: #c4e887;
+  --lime-100: #e9f6d4;
+
+  --ink-900: #11150f;
+  --ink-800: #1b211a;
+  --ink-700: #2c332a;
+  --ink-600: #4a5247;
+  --ink-500: #6b736a;
+  --ink-400: #8d9489;
+
+  --paper: #fbfbf8;
+  --paper-pure: #ffffff;
+  --mist-100: #f3f3ee;
+  --mist-200: #e8e8e0;
+  --mist-300: #d7d7cd;
+
+  --signal-amber: #b4761a;
+  --signal-slate: #4d6b7c;
+  --signal-rose: #9a4b4b;
+
+  /* --- Semantic surfaces ---------------------------------------------- */
+  --surface: var(--paper);
+  --surface-raised: var(--paper-pure);
+  --surface-sunken: var(--mist-100);
+  --surface-ink: var(--forest-950);
+  --surface-forest: var(--forest-900);
+
+  --text-strong: var(--ink-900);
+  --text-body: var(--ink-700);
+  --text-muted: var(--ink-500);
+  --text-on-ink: #f2f6ef;
+  --text-on-ink-muted: #a9bcae;
+
+  --accent: var(--lime-500);
+  --accent-on-light: var(--lime-600);
+  --rule: color-mix(in oklab, var(--ink-900) 12%, transparent);
+  --rule-strong: color-mix(in oklab, var(--ink-900) 22%, transparent);
+  --rule-on-ink: color-mix(in oklab, #ffffff 16%, transparent);
+  --rule-on-ink-strong: color-mix(in oklab, #ffffff 30%, transparent);
+
+  --focus-ring: var(--forest-600);
+  --focus-ring-on-ink: var(--lime-400);
+
+  /* --- Type ------------------------------------------------------------ */
+  --font-display: 'Archivo Variable', 'Archivo', 'Helvetica Neue', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', roboto, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', menlo, consolas, monospace;
+
+  /* Fluid scale, 360px → 1440px viewport. */
+  --step--2: clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
+  --step--1: clamp(0.84rem, 0.81rem + 0.14vw, 0.92rem);
+  --step-0: clamp(1rem, 0.97rem + 0.16vw, 1.08rem);
+  --step-1: clamp(1.18rem, 1.10rem + 0.38vw, 1.38rem);
+  --step-2: clamp(1.42rem, 1.26rem + 0.74vw, 1.82rem);
+  --step-3: clamp(1.72rem, 1.42rem + 1.36vw, 2.46rem);
+  --step-4: clamp(2.06rem, 1.54rem + 2.34vw, 3.34rem);
+  --step-5: clamp(2.46rem, 1.57rem + 3.98vw, 4.62rem);
+  --step-6: clamp(2.86rem, 1.33rem + 6.84vw, 6.6rem);
+
+  --tracking-display: -0.032em;
+  --tracking-tight: -0.018em;
+  --tracking-eyebrow: 0.16em;
+  --leading-display: 1.02;
+  --leading-heading: 1.14;
+  --leading-body: 1.62;
+
+  /* --- Space ----------------------------------------------------------- */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --measure-width: 1360px;
+  --measure-narrow: 68ch;
+  --section-y: clamp(4rem, 9vh + 2.5rem, 8.5rem);
+  --section-y-tight: clamp(3rem, 6vh + 1.5rem, 5.5rem);
+
+  /* --- Form ------------------------------------------------------------ */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(10 35 24 / 0.06), 0 2px 8px rgb(10 35 24 / 0.04);
+  --shadow-md: 0 2px 4px rgb(10 35 24 / 0.05), 0 12px 32px -12px rgb(10 35 24 / 0.16);
+  --shadow-lg: 0 4px 10px rgb(10 35 24 / 0.07), 0 32px 70px -28px rgb(10 35 24 / 0.3);
+
+  /* --- Motion ---------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 160ms;
+  --dur-mid: 320ms;
+  --dur-slow: 620ms;
+  --dur-reveal: 900ms;
+
+  --header-height: 4.5rem;
+}
+
+@media (min-width: 60rem) {
+  :root {
+    --header-height: 5.5rem;
+  }
+}
+
+/* Honour the operating-system preference everywhere motion is used. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-mid: 1ms;
+    --dur-slow: 1ms;
+    --dur-reveal: 1ms;
+  }
+}
